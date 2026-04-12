@@ -183,14 +183,9 @@ class GlaxiorImportJsonWizard(models.TransientModel):
         data = self._parse_json(self.json_file)
 
         # Buscar producto genérico para sistemas configurados
-        product = self.env.ref(
-            'glaxior_json_import.product_sistema_acristalamiento',
-            raise_if_not_found=False,
+        product = self.env['product.product'].search(
+            [('default_code', '=', 'GLAXIOR-CONF')], limit=1,
         )
-        if not product:
-            product = self.env['product.product'].search(
-                [('default_code', '=', 'GLAXIOR-CONF')], limit=1,
-            )
 
         # Crear el pedido de venta
         description = self._build_description(data)
