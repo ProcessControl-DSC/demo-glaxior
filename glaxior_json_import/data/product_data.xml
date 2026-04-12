@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Producto genérico para sistemas configurados desde MyGlaxior -->
+        <record id="product_template_sistema_acristalamiento" model="product.template">
+            <field name="name">Sistema Acristalamiento MyGlaxior</field>
+            <field name="default_code">GLAXIOR-CONF</field>
+            <field name="type">consu</field>
+            <field name="sale_ok" eval="True"/>
+            <field name="purchase_ok" eval="True"/>
+            <field name="list_price">0.0</field>
+            <field name="description_sale">Producto configurado mediante el configurador MyGlaxior. El detalle de la configuración (aperturas, cristales, perfiles, dimensiones) se indica en la descripción de la línea y en el fichero JSON adjunto al pedido.</field>
+        </record>
+
+        <!-- Referencia al product.product para usar en el wizard -->
+        <record id="product_sistema_acristalamiento" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_sistema_acristalamiento"/>
+        </record>
+    </data>
+</odoo>

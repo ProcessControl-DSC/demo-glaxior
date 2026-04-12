@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wizard Form View -->
+    <record id="glaxior_import_json_wizard_form" model="ir.ui.view">
+        <field name="name">glaxior.import.json.wizard.form</field>
+        <field name="model">glaxior.import.json.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importar JSON MyGlaxior">
+                <sheet>
+                    <div class="oe_title mb-3">
+                        <h2>Importar configuración MyGlaxior</h2>
+                        <p class="text-muted">
+                            Sube el fichero JSON generado por el configurador MyGlaxior
+                            para crear automáticamente un pedido de venta.
+                        </p>
+                    </div>
+                    <group>
+                        <group string="Fichero">
+                            <field name="json_file" widget="binary" filename="json_filename"/>
+                            <field name="json_filename" invisible="1"/>
+                        </group>
+                        <group string="Pedido">
+                            <field name="partner_id"/>
+                            <field name="price_unit" widget="monetary"/>
+                            <field name="notes" placeholder="Notas adicionales para el pedido..."/>
+                        </group>
+                    </group>
+                    <group string="Previsualización de la configuración"
+                           invisible="not preview_type">
+                        <group>
+                            <field name="preview_type"/>
+                            <field name="preview_structure"/>
+                            <field name="preview_address"/>
+                        </group>
+                        <group>
+                            <field name="preview_openings"/>
+                            <field name="preview_panels"/>
+                            <field name="preview_glass_thickness"/>
+                            <field name="preview_profile_color"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_import"
+                            string="Crear Pedido de Venta"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-shopping-cart"/>
+                    <button special="cancel"
+                            string="Cancelar"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open wizard -->
+    <record id="action_glaxior_import_json" model="ir.actions.act_window">
+        <field name="name">Importar JSON MyGlaxior</field>
+        <field name="res_model">glaxior.import.json.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu entry under Sales -->
+    <menuitem id="menu_glaxior_import_json"
+              name="Importar JSON MyGlaxior"
+              parent="sale.sale_order_menu"
+              action="action_glaxior_import_json"
+              sequence="99"/>
+</odoo>

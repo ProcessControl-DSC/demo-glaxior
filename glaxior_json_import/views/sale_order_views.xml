@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit sale.order form to show GLAXIOR fields -->
+    <record id="sale_order_form_glaxior" model="ir.ui.view">
+        <field name="name">sale.order.form.glaxior</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add GLAXIOR page/tab when it's a configured order -->
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page string="MyGlaxior"
+                      name="glaxior_config"
+                      invisible="not glaxior_structure_number">
+                    <group>
+                        <group string="Configuración">
+                            <field name="glaxior_product_type"/>
+                            <field name="glaxior_structure_number"/>
+                            <field name="glaxior_json_filename"/>
+                        </group>
+                        <group string="Instalación">
+                            <field name="glaxior_install_address"/>
+                            <field name="glaxior_openings"/>
+                            <field name="glaxior_total_panels"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+            <!-- Add button to import JSON from the sale order form -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="glaxior_structure_number" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add Import JSON button to sale.order tree/list action -->
+    <record id="sale_order_action_import_json" model="ir.actions.act_window">
+        <field name="name">Importar JSON MyGlaxior</field>
+        <field name="res_model">glaxior.import.json.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
