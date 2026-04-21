@@ -137,7 +137,7 @@ patch(PosStore.prototype, {
         }
         const violations = await this._pcCheckOrder(order);
         if (!violations.length) {
-            order.negative_stock_authorizer_id = false;
+            order.negative_stock_authorizer_id = null;
             return super.pay();
         }
         if (!this.config.allow_negative_stock_override) {
@@ -151,7 +151,7 @@ patch(PosStore.prototype, {
         if (!employeeId) {
             return;
         }
-        order.negative_stock_authorizer_id = employeeId;
+        order.negative_stock_authorizer_id = { id: employeeId };
         return super.pay();
     },
 });
