@@ -2,17 +2,35 @@
     'name': 'PoS Restrict Negative Stock',
     'summary': 'Bloquea la venta en PoS de productos sin stock disponible en el almacén configurado, con bypass opcional mediante PIN de empleado autorizado.',
     'description': """
-Restringe la venta en el Punto de Venta de productos almacenables cuya cantidad disponible
-en el almacén de la configuración del PoS sea insuficiente para cubrir la suma de líneas
-del ticket actual.
+PoS Restrict Negative Stock
+===========================
 
-Soporta los dos modos de actualización de stock de Odoo:
-  - Tiempo real: usa `qty_available` sobre el almacén del PoS.
-  - Al cierre de sesión: descuenta las ventas confirmadas en todas las sesiones abiertas
-    que operen sobre el mismo almacén para evitar sobreventa entre cajas.
+Evita la sobreventa en el Punto de Venta comprobando, al añadir cada línea y
+antes del pago, que el stock del almacén de la caja cubre la cantidad solicitada.
+Incluye bypass opcional por PIN de empleado autorizador con trazabilidad del
+autorizador en el pedido.
 
-Permite configurar una lista de empleados autorizados que pueden forzar la venta introduciendo
-su PIN. Cada autorización queda registrada en el pedido.
+Funcionalidades clave
+---------------------
+* Control estricto por almacén de la ``pos.config`` (nunca considera otros almacenes).
+* Soporte de los dos modos de actualización de stock de Odoo:
+    - Tiempo real: usa ``qty_available`` con contexto de almacén, sin doble descuento.
+    - Al cierre de sesión: descuenta líneas ya pagadas de todas las sesiones
+      abiertas con el mismo almacén, evitando sobreventa entre cajas.
+* Bloqueo temprano al añadir la línea: el cajero ve el error antes de seguir escaneando.
+* Revalidación completa al pulsar Pago, incluyendo modificaciones posteriores.
+* Bypass opcional con PIN de empleado autorizado configurable por PoS.
+* Registro del autorizador en ``pos.order.negative_stock_authorizer_id``.
+
+Configuración
+-------------
+Punto de Venta > Configuración > Ajustes > Interfaz de PoS > Restrict Negative Stock.
+
+Compatibilidad
+--------------
+Odoo 19.0 Community y Enterprise. Dependencias: point_of_sale, stock, hr.
+
+Desarrollado por Process Control — https://www.processcontrol.es
     """,
     'author': 'Process Control',
     'website': 'https://www.processcontrol.es',
