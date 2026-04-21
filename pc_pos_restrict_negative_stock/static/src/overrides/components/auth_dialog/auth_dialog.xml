@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pc_pos_restrict_negative_stock.NegativeStockAuthDialog">
+        <Dialog title="title" size="'md'">
+            <div class="pc-negative-stock-auth">
+                <p class="fw-bold">Stock insufficient for this order:</p>
+                <pre class="text-muted" t-esc="props.body"/>
+                <div class="mt-3">
+                    <label for="pc_negative_stock_pin">Authoriser PIN</label>
+                    <input id="pc_negative_stock_pin"
+                           type="password"
+                           class="form-control"
+                           t-ref="pinInput"
+                           t-model="state.pin"
+                           t-on-keydown="onKeydown"
+                           autocomplete="off"/>
+                </div>
+                <div t-if="state.error" class="text-danger mt-2" t-esc="state.error"/>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary"
+                        t-on-click="onConfirm"
+                        t-att-disabled="state.pending">Authorise</button>
+                <button class="btn btn-secondary" t-on-click="onCancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

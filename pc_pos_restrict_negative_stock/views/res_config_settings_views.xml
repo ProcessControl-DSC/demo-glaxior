@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_pc_negative_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.pc.negative.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_interface_section']" position="inside">
+                <setting id="pos_restrict_negative_stock_setting"
+                         string="Restrict Negative Stock"
+                         help="Block the sale of storable products with insufficient stock in the PoS warehouse.">
+                    <field name="pos_restrict_negative_stock"/>
+                    <div class="content-group" invisible="not pos_restrict_negative_stock">
+                        <div class="mt8">
+                            <field name="pos_allow_negative_stock_override"/>
+                            <label for="pos_allow_negative_stock_override" string="Allow bypass with authoriser PIN"/>
+                        </div>
+                        <div class="mt8" invisible="not pos_allow_negative_stock_override">
+                            <label for="pos_negative_stock_authorizer_ids" string="Authorised Employees"/>
+                            <field name="pos_negative_stock_authorizer_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
