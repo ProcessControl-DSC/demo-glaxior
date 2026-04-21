@@ -24,14 +24,6 @@ class PosConfig(models.Model):
         help="Employees allowed to authorise a sale below available stock by PIN.",
     )
 
-    @api.model
-    def _load_pos_data_fields(self, config):
-        params = super()._load_pos_data_fields(config)
-        for field in ("restrict_negative_stock", "allow_negative_stock_override"):
-            if field not in params:
-                params.append(field)
-        return params
-
     def get_available_stock_for_pos(self, product_ids):
         """Return {product_id: available_qty} for the PoS warehouse.
 
