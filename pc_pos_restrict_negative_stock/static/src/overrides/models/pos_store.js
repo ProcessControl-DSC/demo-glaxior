@@ -104,7 +104,7 @@ patch(PosStore.prototype, {
             return super.addLineToOrder(vals, order, opts, configure);
         }
         const previousQty = order
-            .get_orderlines()
+            .getOrderlines()
             .filter((l) => l.product_id?.id === product.id && l.qty > 0)
             .reduce((acc, l) => acc + l.qty, 0);
         const availability = await this._pcFetchAvailability([product.id]);
