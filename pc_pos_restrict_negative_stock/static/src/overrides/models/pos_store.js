@@ -26,7 +26,7 @@ patch(PosStore.prototype, {
             return [];
         }
         const demand = {};
-        for (const line of order.get_orderlines()) {
+        for (const line of order.getOrderlines()) {
             const product = line.product_id;
             if (!product || !product.is_storable || line.qty <= 0) {
                 continue;
@@ -131,7 +131,7 @@ patch(PosStore.prototype, {
     },
 
     async pay() {
-        const order = this.get_order();
+        const order = this.getOrder();
         if (!order || !this.config.restrict_negative_stock) {
             return super.pay();
         }
