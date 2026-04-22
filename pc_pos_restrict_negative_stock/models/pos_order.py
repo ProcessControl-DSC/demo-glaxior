@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class PosOrder(models.Model):
@@ -10,10 +10,3 @@ class PosOrder(models.Model):
         readonly=True,
         help="Employee who authorised the sale below available stock by entering their PIN.",
     )
-
-    @api.model
-    def _load_pos_data_fields(self, config):
-        params = super()._load_pos_data_fields(config)
-        if "negative_stock_authorizer_id" not in params:
-            params.append("negative_stock_authorizer_id")
-        return params
