@@ -1,36 +1,37 @@
 {
     'name': 'PoS Restrict Negative Stock',
-    'summary': 'Bloquea la venta en PoS de productos sin stock disponible en el almacén configurado, con bypass opcional mediante PIN de empleado autorizado.',
+    'summary': 'Prevents selling Point of Sale products when the configured warehouse has insufficient stock, with optional PIN bypass by an authorised employee.',
     'description': """
 PoS Restrict Negative Stock
 ===========================
 
-Evita la sobreventa en el Punto de Venta comprobando, al añadir cada línea y
-antes del pago, que el stock del almacén de la caja cubre la cantidad solicitada.
-Incluye bypass opcional por PIN de empleado autorizador con trazabilidad del
-autorizador en el pedido.
+Prevents overselling at the Point of Sale by checking, both when each line
+is added and before payment, that the stock of the PoS warehouse covers the
+requested quantity. Includes optional bypass by authorised employee PIN,
+with full traceability of the authoriser on the order.
 
-Funcionalidades clave
----------------------
-* Control estricto por almacén de la ``pos.config`` (nunca considera otros almacenes).
-* Soporte de los dos modos de actualización de stock de Odoo:
-    - Tiempo real: usa ``qty_available`` con contexto de almacén, sin doble descuento.
-    - Al cierre de sesión: descuenta líneas ya pagadas de todas las sesiones
-      abiertas con el mismo almacén, evitando sobreventa entre cajas.
-* Bloqueo temprano al añadir la línea: el cajero ve el error antes de seguir escaneando.
-* Revalidación completa al pulsar Pago, incluyendo modificaciones posteriores.
-* Bypass opcional con PIN de empleado autorizado configurable por PoS.
-* Registro del autorizador en ``pos.order.negative_stock_authorizer_id``.
+Key features
+------------
+* Strict control per ``pos.config`` warehouse (never considers other warehouses).
+* Supports both Odoo stock update modes:
+    - Real time: uses ``qty_available`` with warehouse context, no double discount.
+    - At session closing: subtracts already paid lines from every open session on
+      the same warehouse, preventing overselling between cashiers.
+* Early blocking when the line is added: the cashier sees the error before
+  continuing to scan.
+* Full revalidation on Pay, including later modifications.
+* Optional bypass with authorised employee PIN, configurable per PoS.
+* Authoriser recorded in ``pos.order.negative_stock_authorizer_id``.
 
-Configuración
+Configuration
 -------------
-Punto de Venta > Configuración > Ajustes > Interfaz de PoS > Restrict Negative Stock.
+Point of Sale > Configuration > Settings > PoS Interface > Restrict Negative Stock.
 
-Compatibilidad
---------------
-Odoo 19.0 Community y Enterprise. Dependencias: point_of_sale, stock, hr.
+Compatibility
+-------------
+Odoo 19.0 Community and Enterprise. Dependencies: point_of_sale, stock, hr.
 
-Desarrollado por Process Control — https://www.processcontrol.es
+Developed by Process Control — https://www.processcontrol.es
     """,
     'author': 'Process Control',
     'website': 'https://www.processcontrol.es',

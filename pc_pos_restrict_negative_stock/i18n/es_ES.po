@@ -1,0 +1,156 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pc_pos_restrict_negative_stock
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-04-22 14:30+0000\n"
+"Last-Translator: Process Control <info@processcontrol.es>\n"
+"Language-Team: Spanish (Spain) <es_ES@processcontrol.es>\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.module.module,shortdesc:pc_pos_restrict_negative_stock.module_meta_information
+msgid "PoS Restrict Negative Stock"
+msgstr "TPV — Restringir venta con stock negativo"
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.module.module,summary:pc_pos_restrict_negative_stock.module_meta_information
+msgid "Prevents selling Point of Sale products when the configured warehouse has insufficient stock, with optional PIN bypass by an authorised employee."
+msgstr "Impide vender productos en el TPV cuando el almacén configurado no tiene stock suficiente, con bypass opcional mediante PIN de empleado autorizado."
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.model.fields,field_description:pc_pos_restrict_negative_stock.field_pos_config__restrict_negative_stock
+#: model:ir.model.fields,field_description:pc_pos_restrict_negative_stock.field_res_config_settings__pos_restrict_negative_stock
+#: model_terms:ir.ui.view,arch_db:pc_pos_restrict_negative_stock.res_config_settings_view_form_pc_negative_stock
+msgid "Restrict Negative Stock"
+msgstr "Restringir stock negativo"
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.model.fields,help:pc_pos_restrict_negative_stock.field_pos_config__restrict_negative_stock
+msgid "Prevents the sale of storable products when the available quantity in the PoS warehouse cannot cover the ticket."
+msgstr "Impide la venta de productos almacenables cuando la cantidad disponible en el almacén del TPV no cubre el ticket."
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.model.fields,field_description:pc_pos_restrict_negative_stock.field_pos_config__allow_negative_stock_override
+#: model:ir.model.fields,field_description:pc_pos_restrict_negative_stock.field_res_config_settings__pos_allow_negative_stock_override
+msgid "Allow PIN Override"
+msgstr "Permitir bypass con PIN"
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.model.fields,help:pc_pos_restrict_negative_stock.field_pos_config__allow_negative_stock_override
+msgid "When enabled, an authorised employee can force the sale by entering their PIN."
+msgstr "Si se activa, un empleado autorizado puede forzar la venta introduciendo su PIN."
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.model.fields,field_description:pc_pos_restrict_negative_stock.field_pos_config__negative_stock_authorizer_ids
+#: model:ir.model.fields,field_description:pc_pos_restrict_negative_stock.field_res_config_settings__pos_negative_stock_authorizer_ids
+msgid "Negative Stock Authorisers"
+msgstr "Empleados autorizadores de stock negativo"
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.model.fields,help:pc_pos_restrict_negative_stock.field_pos_config__negative_stock_authorizer_ids
+msgid "Employees allowed to authorise a sale below available stock by PIN."
+msgstr "Empleados autorizados a validar una venta por debajo del stock disponible mediante su PIN."
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.model.fields,field_description:pc_pos_restrict_negative_stock.field_pos_order__negative_stock_authorizer_id
+msgid "Negative Stock Authoriser"
+msgstr "Autorizador de stock negativo"
+
+#. module: pc_pos_restrict_negative_stock
+#: model:ir.model.fields,help:pc_pos_restrict_negative_stock.field_pos_order__negative_stock_authorizer_id
+msgid "Employee who authorised the sale below available stock by entering their PIN."
+msgstr "Empleado que autorizó la venta por debajo del stock disponible introduciendo su PIN."
+
+#. module: pc_pos_restrict_negative_stock
+#: model_terms:ir.ui.view,arch_db:pc_pos_restrict_negative_stock.view_pos_order_form_pc_negative_stock
+msgid "Negative Stock Authorisation"
+msgstr "Autorización de stock negativo"
+
+#. module: pc_pos_restrict_negative_stock
+#: model_terms:ir.ui.view,arch_db:pc_pos_restrict_negative_stock.res_config_settings_view_form_pc_negative_stock
+msgid "Block the sale of storable products with insufficient stock in the PoS warehouse."
+msgstr "Bloquea la venta de productos almacenables con stock insuficiente en el almacén del TPV."
+
+#. module: pc_pos_restrict_negative_stock
+#: model_terms:ir.ui.view,arch_db:pc_pos_restrict_negative_stock.res_config_settings_view_form_pc_negative_stock
+msgid "Allow bypass with authoriser PIN"
+msgstr "Permitir bypass con PIN de autorizador"
+
+#. module: pc_pos_restrict_negative_stock
+#: model_terms:ir.ui.view,arch_db:pc_pos_restrict_negative_stock.res_config_settings_view_form_pc_negative_stock
+msgid "Authorised Employees"
+msgstr "Empleados autorizados"
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/models/pos_store.js:0
+msgid "Not enough stock"
+msgstr "Stock insuficiente"
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/models/pos_store.js:0
+msgid "Stock warning"
+msgstr "Aviso de stock"
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/models/pos_store.js:0
+msgid "An authoriser PIN will be required at payment."
+msgstr "Se solicitará el PIN de un autorizador al pagar."
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/models/pos_store.js:0
+msgid "%(name)s: available %(available)s, requested %(demand)s"
+msgstr "%(name)s: disponible %(available)s, solicitado %(demand)s"
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/components/auth_dialog/auth_dialog.js:0
+msgid "Authoriser PIN required"
+msgstr "PIN de autorizador requerido"
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/components/auth_dialog/auth_dialog.js:0
+msgid "Enter the authoriser PIN."
+msgstr "Introduzca el PIN del autorizador."
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/components/auth_dialog/auth_dialog.js:0
+msgid "PIN not valid for an authorised employee."
+msgstr "El PIN no corresponde a un empleado autorizado."
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/components/auth_dialog/auth_dialog.xml:0
+msgid "Stock insufficient for this order:"
+msgstr "Stock insuficiente para este pedido:"
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/components/auth_dialog/auth_dialog.xml:0
+msgid "Authoriser PIN"
+msgstr "PIN del autorizador"
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/components/auth_dialog/auth_dialog.xml:0
+msgid "Authorise"
+msgstr "Autorizar"
+
+#. module: pc_pos_restrict_negative_stock
+#. odoo-javascript
+#: code:addons/pc_pos_restrict_negative_stock/static/src/overrides/components/auth_dialog/auth_dialog.xml:0
+msgid "Cancel"
+msgstr "Cancelar"
