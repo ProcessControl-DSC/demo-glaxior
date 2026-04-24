@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.tools.float_utils import float_compare
 
 
@@ -29,6 +29,42 @@ class SaleOrder(models.Model):
         copy=False,
         help="Virtual warehouse set on the sale order before auto-selection.",
     )
+    pc_consolidation_picking_count = fields.Integer(
+        string='Consolidation Transfers',
+        compute='_compute_pc_consolidation_picking_count',
+    )
+
+    @api.depends('name', 'picking_ids')
+    def _compute_pc_consolidation_picking_count(self):
+        for order in self:
+            order.pc_consolidation_picking_count = len(
+                order._pc_get_consolidation_pickings()
+            )
+
+    def _pc_get_consolidation_pickings(self):
+        """Return pickings linked to this SO via ``origin`` that are not part
+        of ``picking_ids`` — i.e. the inter-warehouse transfers launched to
+        consolidate stock at the winner before the customer delivery."""
+        self.ensure_one()
+        if not self.name:
+            return self.env['stock.picking']
+        return self.env['stock.picking'].search([
+            ('origin', '=', self.name),
+            ('id', 'not in', self.picking_ids.ids),
+        ])
+
+    def action_view_pc_consolidation_pickings(self):
+        self.ensure_one()
+        pickings = self._pc_get_consolidation_pickings()
+        action = self.env['ir.actions.act_window']._for_xml_id(
+            'stock.action_picking_tree_all'
+        )
+        action['domain'] = [('id', 'in', pickings.ids)]
+        action['context'] = {
+            'default_origin': self.name,
+            'search_default_origin': self.name,
+        }
+        return action
 
     def _action_confirm(self):
         for order in self:
