@@ -105,6 +105,11 @@ class SaleOrder(models.Model):
         """For every line whose demand exceeds the winner's stock, launch
         resupply procurements from the other physical warehouses towards the
         winner, using the configured 'resupply from another warehouse' routes.
+
+        In v19 the procurement engine is linked to the sale order through
+        ``stock.reference`` records (the old ``procurement.group`` model was
+        removed). The consolidation moves reuse the order's existing
+        ``stock_reference_ids`` so everything stays attached to the sale.
         """
         self.ensure_one()
         other_whs = (
@@ -113,11 +118,11 @@ class SaleOrder(models.Model):
         if not other_whs:
             return
 
+        references = self._pc_ensure_stock_reference(eligible_lines)
+        date_deadline = self.commitment_date or fields.Datetime.now()
         Procurement = self.env['stock.rule'].Procurement
-        group = self._pc_get_or_create_consolidation_group(winner_wh)
-        procurements = []
-        base_values = self._pc_build_procurement_base_values(group, winner_wh)
         precision = self.env['decimal.precision'].precision_get('Product Unit')
+        procurements = []
 
         for line in eligible_lines:
             in_winner = stock_by_wh_line[winner_wh.id][line.id]
@@ -134,8 +139,16 @@ class SaleOrder(models.Model):
                 route = self._pc_resupply_route(winner_wh, other)
                 if not route:
                     continue
-                values = dict(base_values)
-                values['route_ids'] = route
+                values = {
+                    'date_planned': date_deadline,
+                    'date_deadline': date_deadline,
+                    'warehouse_id': winner_wh,
+                    'partner_id': self.partner_shipping_id.id,
+                    'company_id': self.company_id,
+                    'origin': self.name,
+                    'reference_ids': references,
+                    'route_ids': route,
+                }
                 procurements.append(Procurement(
                     line.product_id,
                     take,
@@ -151,33 +164,22 @@ class SaleOrder(models.Model):
         if procurements:
             self.env['stock.rule'].run(procurements)
 
-    def _pc_get_or_create_consolidation_group(self, winner_wh):
+    def _pc_ensure_stock_reference(self, eligible_lines):
+        """Return the sale order's stock.reference recordset, creating one
+        from the first eligible line if none exists yet. In v19 the core
+        builds a stock.reference lazily inside _action_launch_stock_rule;
+        when we inject procurements before that, we must guarantee one
+        exists."""
         self.ensure_one()
-        name = _("%(order)s (Consolidation)", order=self.name)
-        group = self.env['procurement.group'].search(
-            [('name', '=', name), ('sale_id', '=', self.id)], limit=1
+        references = self.stock_reference_ids
+        if references:
+            return references
+        first_line = eligible_lines[:1]
+        if not first_line:
+            return self.env['stock.reference']
+        return self.env['stock.reference'].create(
+            first_line._prepare_reference_vals()
         )
-        if group:
-            return group
-        return self.env['procurement.group'].create({
-            'name': name,
-            'move_type': 'direct',
-            'sale_id': self.id,
-            'partner_id': self.partner_shipping_id.id,
-        })
-
-    def _pc_build_procurement_base_values(self, group, winner_wh):
-        self.ensure_one()
-        date_deadline = self.commitment_date or fields.Datetime.now()
-        return {
-            'group_id': group,
-            'date_planned': date_deadline,
-            'date_deadline': date_deadline,
-            'warehouse_id': winner_wh,
-            'partner_id': self.partner_shipping_id.id,
-            'company_id': self.company_id,
-            'origin': self.name,
-        }
 
     @staticmethod
     def _pc_resupply_route(supplied_wh, supplier_wh):
