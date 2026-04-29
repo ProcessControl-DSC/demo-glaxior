@@ -171,10 +171,13 @@ class SaleOrder(models.Model):
             return
 
         precision = self.env['decimal.precision'].precision_get('Product Unit')
+        affected_pickings = self.env['stock.picking']
         for line in self.order_line.filtered(self._pc_is_line_eligible):
             pick_move = self._pc_winner_pick_move_for(line, winner)
             if not pick_move:
                 continue
+            if pick_move.picking_id:
+                affected_pickings |= pick_move.picking_id
             # ``super()._action_confirm()`` already reserved every unit of
             # ``pick_move`` that the winner had physically on hand. The MTS
             # portion is exactly what the move could grab; the rest is the
@@ -188,6 +191,13 @@ class SaleOrder(models.Model):
             if not mto_move:
                 continue
             self._pc_chain_resupply_for_move(line, mto_move, missing, winner, others)
+
+        # Force the customer pick to behave all-or-nothing so the operator
+        # cannot ship the MTS portion while the MTO portion is still in
+        # transit, and refresh its state to reflect the new waiting moves.
+        if affected_pickings:
+            affected_pickings.write({'move_type': 'one'})
+            affected_pickings._compute_state()
 
     def _pc_winner_pick_move_for(self, line, winner):
         """The first move in the customer pick that originates from the
