@@ -175,12 +175,16 @@ class SaleOrder(models.Model):
             pick_move = self._pc_winner_pick_move_for(line, winner)
             if not pick_move:
                 continue
-            available = self._pc_get_available_stock(line.product_id, winner)
+            # ``super()._action_confirm()`` already reserved every unit of
+            # ``pick_move`` that the winner had physically on hand. The MTS
+            # portion is exactly what the move could grab; the rest is the
+            # quantity we have to bring in from other warehouses.
+            reserved = pick_move.quantity
             demand = pick_move.product_uom_qty
-            if float_compare(demand, available, precision_digits=precision) <= 0:
+            if float_compare(demand, reserved, precision_digits=precision) <= 0:
                 continue
-            missing = demand - available
-            mto_move = self._pc_split_pick_move(pick_move, missing, available, precision)
+            missing = demand - reserved
+            mto_move = self._pc_split_pick_move(pick_move, missing, reserved, precision)
             if not mto_move:
                 continue
             self._pc_chain_resupply_for_move(line, mto_move, missing, winner, others)

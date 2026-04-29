@@ -42,7 +42,7 @@ Developed by Process Control -- https://www.processcontrol.es
     'author': 'Process Control',
     'website': 'https://www.processcontrol.es',
     'category': 'Sales/Sales',
-    'version': '19.0.1.3.1',
+    'version': '19.0.1.3.2',
     'license': 'LGPL-3',
     'depends': [
         'sale_stock',
