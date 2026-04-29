@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from odoo import _, api, fields, models
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class SaleOrder(models.Model):
@@ -43,8 +43,8 @@ class SaleOrder(models.Model):
 
     def _pc_get_consolidation_pickings(self):
         """Return pickings linked to this SO via ``origin`` that are not part
-        of ``picking_ids`` — i.e. the inter-warehouse transfers launched to
-        consolidate stock at the winner before the customer delivery."""
+        of ``picking_ids`` -- i.e. the inter-warehouse transfers that feed
+        stock to the winner warehouse before the customer delivery."""
         self.ensure_one()
         if not self.name:
             return self.env['stock.picking']
@@ -66,13 +66,30 @@ class SaleOrder(models.Model):
         }
         return action
 
+    # ------------------------------------------------------------------
+    # Confirmation flow
+    # ------------------------------------------------------------------
     def _action_confirm(self):
+        # Phase 1: choose the winner physical warehouse before super() generates
+        # any picking, so the SO pickings are created in the correct warehouse.
         for order in self:
             if order.warehouse_id.is_virtual_warehouse \
                     and order.warehouse_id.pc_child_warehouse_ids:
                 order._pc_apply_warehouse_selection()
-        return super()._action_confirm()
+        # Phase 2: super() generates the customer pickings (Pick + Out) at the
+        # winner warehouse with default ``make_to_stock`` rules.
+        res = super()._action_confirm()
+        # Phase 3: for case_b orders, replace the MTS slack with a properly
+        # chained Make-To-Order leg fed by inter-warehouse resupply moves so
+        # the customer pick cannot start until all stock is consolidated.
+        for order in self:
+            if order.pc_warehouse_selection_mode == 'case_b':
+                order._pc_build_consolidation_chain()
+        return res
 
+    # ------------------------------------------------------------------
+    # Phase 1 -- winner selection
+    # ------------------------------------------------------------------
     def _pc_apply_warehouse_selection(self):
         self.ensure_one()
         virtual_wh = self.warehouse_id
@@ -83,12 +100,10 @@ class SaleOrder(models.Model):
             return
 
         coverage_by_wh = {}
-        stock_by_wh_line = defaultdict(dict)
         for wh in candidates:
             covered = 0.0
             for line in eligible_lines:
                 available = self._pc_get_available_stock(line.product_id, wh)
-                stock_by_wh_line[wh.id][line.id] = available
                 covered += min(available, line.product_uom_qty)
             coverage_by_wh[wh.id] = covered
 
@@ -110,9 +125,6 @@ class SaleOrder(models.Model):
         else:
             self.pc_warehouse_selection_mode = 'case_b'
             self.pc_requires_consolidation = True
-            self._pc_launch_consolidation_procurements(
-                winner, eligible_lines, stock_by_wh_line
-            )
 
     @staticmethod
     def _pc_is_line_eligible(line):
@@ -135,87 +147,117 @@ class SaleOrder(models.Model):
         total = sum(quants.mapped('available_quantity'))
         return max(0.0, total)
 
-    def _pc_launch_consolidation_procurements(
-        self, winner_wh, eligible_lines, stock_by_wh_line
-    ):
-        """For every line whose demand exceeds the winner's stock, launch
-        resupply procurements from the other physical warehouses towards the
-        winner, using the configured 'resupply from another warehouse' routes.
+    # ------------------------------------------------------------------
+    # Phase 3 -- consolidation chain
+    # ------------------------------------------------------------------
+    def _pc_build_consolidation_chain(self):
+        """For each eligible line whose demand exceeds the stock available
+        in the winner warehouse, split the customer pick move into two:
 
-        In v19 the procurement engine is linked to the sale order through
-        ``stock.reference`` records (the old ``procurement.group`` model was
-        removed). The consolidation moves reuse the order's existing
-        ``stock_reference_ids`` so everything stays attached to the sale.
+          * an MTS portion equal to ``available`` (reserves stock right away);
+          * an MTO portion equal to the missing quantity, chained backwards
+            to inter-warehouse resupply moves.
+
+        The MTO portion's ``move_orig_ids`` will be populated by the
+        procurement engine, so the customer pick cannot start until the
+        consolidation is complete.
         """
         self.ensure_one()
-        other_whs = (
-            self.pc_original_warehouse_id.pc_child_warehouse_ids - winner_wh
-        )
-        if not other_whs:
+        winner = self.warehouse_id
+        if not winner or not self.pc_original_warehouse_id:
+            return
+        others = self.pc_original_warehouse_id.pc_child_warehouse_ids - winner
+        if not others:
             return
 
-        references = self._pc_ensure_stock_reference(eligible_lines)
-        date_deadline = self.commitment_date or fields.Datetime.now()
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
+        for line in self.order_line.filtered(self._pc_is_line_eligible):
+            pick_move = self._pc_winner_pick_move_for(line, winner)
+            if not pick_move:
+                continue
+            available = self._pc_get_available_stock(line.product_id, winner)
+            demand = pick_move.product_uom_qty
+            if float_compare(demand, available, precision_digits=precision) <= 0:
+                continue
+            missing = demand - available
+            mto_move = self._pc_split_pick_move(pick_move, missing, available, precision)
+            if not mto_move:
+                continue
+            self._pc_chain_resupply_for_move(line, mto_move, missing, winner, others)
+
+    def _pc_winner_pick_move_for(self, line, winner):
+        """The first move in the customer pick that originates from the
+        winner's stock location for this sale line."""
+        return line.move_ids.filtered(
+            lambda m: m.location_id == winner.lot_stock_id
+            and m.state not in ('done', 'cancel')
+        )[:1]
+
+    def _pc_split_pick_move(self, pick_move, missing, available, precision):
+        """Reduce ``pick_move`` so it carries only the MTS-reservable portion
+        and return the new MTO move that holds the missing quantity. When no
+        stock is available at all, the original move itself becomes the MTO
+        move (no split needed)."""
+        if float_is_zero(available, precision_digits=precision):
+            pick_move.write({'procure_method': 'make_to_order'})
+            return pick_move
+        new_move_ids = pick_move._split(missing)
+        if not new_move_ids:
+            return self.env['stock.move']
+        mto_move = self.env['stock.move'].browse(new_move_ids).exists()
+        mto_move.write({'procure_method': 'make_to_order'})
+        if pick_move.picking_id and not mto_move.picking_id:
+            mto_move.write({'picking_id': pick_move.picking_id.id})
+        mto_move._action_confirm(merge=False)
+        return mto_move
+
+    def _pc_chain_resupply_for_move(self, line, mto_move, missing, winner, others):
+        """Run resupply procurements that feed ``winner.lot_stock_id`` and
+        chain (via ``move_dest_ids``) to ``mto_move`` so the customer pick
+        waits until the inter-warehouse stock has arrived."""
+        self.ensure_one()
+        if not self.stock_reference_ids:
+            self.env['stock.reference'].create(line._prepare_reference_vals())
         Procurement = self.env['stock.rule'].Procurement
         precision = self.env['decimal.precision'].precision_get('Product Unit')
+        date_deadline = self.commitment_date or fields.Datetime.now()
         procurements = []
 
-        for line in eligible_lines:
-            in_winner = stock_by_wh_line[winner_wh.id][line.id]
-            missing = line.product_uom_qty - in_winner
+        for other in others.sorted(lambda w: (w.sequence, w.id)):
             if float_compare(missing, 0.0, precision_digits=precision) <= 0:
+                break
+            avail_other = self._pc_get_available_stock(line.product_id, other)
+            take = min(missing, avail_other)
+            if float_compare(take, 0.0, precision_digits=precision) <= 0:
                 continue
-            for other in other_whs.sorted(lambda w: (w.sequence, w.id)):
-                if float_compare(missing, 0.0, precision_digits=precision) <= 0:
-                    break
-                other_available = stock_by_wh_line[other.id][line.id]
-                take = min(missing, other_available)
-                if float_compare(take, 0.0, precision_digits=precision) <= 0:
-                    continue
-                route = self._pc_resupply_route(winner_wh, other)
-                if not route:
-                    continue
-                values = {
-                    'date_planned': date_deadline,
-                    'date_deadline': date_deadline,
-                    'warehouse_id': winner_wh,
-                    'partner_id': self.partner_shipping_id.id,
-                    'company_id': self.company_id,
-                    'origin': self.name,
-                    'reference_ids': references,
-                    'route_ids': route,
-                }
-                procurements.append(Procurement(
-                    line.product_id,
-                    take,
-                    line.product_uom_id,
-                    winner_wh.lot_stock_id,
-                    _("Consolidation for %s", self.name),
-                    self.name,
-                    self.company_id,
-                    values,
-                ))
-                missing -= take
+            route = self._pc_resupply_route(winner, other)
+            if not route:
+                continue
+            values = {
+                'date_planned': date_deadline,
+                'date_deadline': date_deadline,
+                'warehouse_id': winner,
+                'partner_id': self.partner_shipping_id.id,
+                'company_id': self.company_id,
+                'origin': self.name,
+                'reference_ids': self.stock_reference_ids,
+                'route_ids': route,
+                'move_dest_ids': [(4, mto_move.id)],
+            }
+            procurements.append(Procurement(
+                line.product_id,
+                take,
+                line.product_uom_id,
+                winner.lot_stock_id,
+                _("Consolidation for %s", self.name),
+                self.name,
+                self.company_id,
+                values,
+            ))
+            missing -= take
 
         if procurements:
             self.env['stock.rule'].run(procurements)
-
-    def _pc_ensure_stock_reference(self, eligible_lines):
-        """Return the sale order's stock.reference recordset, creating one
-        from the first eligible line if none exists yet. In v19 the core
-        builds a stock.reference lazily inside _action_launch_stock_rule;
-        when we inject procurements before that, we must guarantee one
-        exists."""
-        self.ensure_one()
-        references = self.stock_reference_ids
-        if references:
-            return references
-        first_line = eligible_lines[:1]
-        if not first_line:
-            return self.env['stock.reference']
-        return self.env['stock.reference'].create(
-            first_line._prepare_reference_vals()
-        )
 
     @staticmethod
     def _pc_resupply_route(supplied_wh, supplier_wh):
