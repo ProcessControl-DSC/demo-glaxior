@@ -1,184 +1,184 @@
-<section style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #212529; max-width: 960px; margin: 0 auto; padding: 24px;">
+<div style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1e293b; line-height: 1.6; max-width: 1000px; margin: 0 auto; padding: 24px;" data-oe-version="1.2">
 
     <!-- HERO -->
-    <div style="background: linear-gradient(135deg, #2F5496 0%, #1f3864 100%); color: #ffffff; padding: 48px 32px; border-radius: 8px; margin-bottom: 32px; text-align: center;">
-        <h1 style="margin: 0 0 12px 0; font-size: 32px; font-weight: 700; color: #ffffff;">PoS Restrict Negative Stock</h1>
-        <p style="margin: 0 0 16px 0; font-size: 18px; opacity: 0.95;">Bloqueo inteligente de ventas en Punto de Venta cuando no hay stock suficiente en el almacén de la caja.</p>
-        <div style="display: inline-block; background-color: #ffffff; color: #2F5496; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; margin-top: 8px;">Process Control — La confianza hecha servicio</div>
+    <div style="background: linear-gradient(135deg, #0f4c81 0%, #0d3f6b 100%); color: #ffffff; padding: 48px 32px; border-radius: 8px; margin-bottom: 32px; text-align: center;">
+        <h1 style="margin: 0 0 12px 0; font-size: 30px; font-weight: 700; color: #ffffff;">PoS Restrict Negative Stock</h1>
+        <p style="margin: 0 0 16px 0; font-size: 17px; opacity: 0.95;">Bloqueo inteligente de ventas en Punto de Venta cuando no hay stock suficiente en el almacén de la caja.</p>
+        <div style="display: inline-block; background-color: #ffffff; color: #0f4c81; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; margin-top: 8px;">Process Control — La confianza hecha servicio</div>
     </div>
 
     <!-- RESUMEN EJECUTIVO -->
-    <div style="background-color: #f8f9fa; border-left: 4px solid #2F5496; padding: 20px 24px; margin-bottom: 32px; border-radius: 4px;">
-        <h2 style="color: #2F5496; margin-top: 0; margin-bottom: 12px;">¿Para qué sirve?</h2>
-        <p style="margin: 0 0 12px 0; line-height: 1.6;">
-            Evita la sobreventa en el PoS comprobando, al añadir cada línea y antes del pago, que el stock del <b>almacén configurado en esa caja</b> cubre la cantidad solicitada. Incluye bypass opcional mediante <b>PIN de empleado autorizado</b>, con trazabilidad completa del autorizador en el pedido.
-        </p>
-        <p style="margin: 0; line-height: 1.6;">
-            Funciona correctamente tanto en modo de actualización de stock <b>en tiempo real</b> como <b>al cierre de sesión</b>, evitando doble descuento y cubriendo el escenario de múltiples cajas sobre el mismo almacén.
-        </p>
+    <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 0 0 28px 0; font-size: 14px; color: #334155;">
+        <p style="margin: 4px 0;"><strong>¿Para qué sirve?</strong></p>
+        <p style="margin: 6px 0;">Evita la sobreventa en el PoS comprobando, al añadir cada línea y antes del pago, que el stock del almacén configurado en esa caja cubre la cantidad solicitada. Incluye bypass opcional mediante PIN de empleado autorizado, con trazabilidad completa del autorizador en el pedido.</p>
+        <p style="margin: 6px 0;">Funciona correctamente tanto en modo de actualización de stock en tiempo real como al cierre de sesión, evitando doble descuento y cubriendo el escenario de múltiples cajas sobre el mismo almacén.</p>
     </div>
 
-    <!-- VENTAJAS CLAVE -->
-    <h2 style="color: #2F5496; border-bottom: 2px solid #2F5496; padding-bottom: 8px; margin-top: 40px;">Lo esencial</h2>
-    <table style="border-collapse: collapse; width: 100%; font-size: 14px; margin-bottom: 24px;">
+    <!-- LO ESENCIAL -->
+    <h2 style="font-size: 20px; font-weight: 700; color: #0f4c81; margin: 32px 0 16px 0; padding-bottom: 8px; border-bottom: 3px solid #0f4c81;">Lo esencial</h2>
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0 24px 0; font-size: 13px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+        <thead>
+            <tr>
+                <th style="background: linear-gradient(180deg, #0f4c81 0%, #0d3f6b 100%); color: white; font-weight: 600; padding: 10px 14px; text-align: left; width: 30%;">Funcionalidad</th>
+                <th style="background: linear-gradient(180deg, #0f4c81 0%, #0d3f6b 100%); color: white; font-weight: 600; padding: 10px 14px; text-align: left;">Detalle</th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
-                <th style="background-color: #2F5496; color: #ffffff; padding: 10px 14px; border: 1px solid #1f3864; text-align: left; font-weight: bold; width: 30%;">Funcionalidad</th>
-                <th style="background-color: #2F5496; color: #ffffff; padding: 10px 14px; border: 1px solid #1f3864; text-align: left; font-weight: bold;">Detalle</th>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><strong>Ámbito por almacén</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;">Control estricto del stock del <code>warehouse_id</code> de la <code>pos.config</code>. No considera stock de otros almacenes, por decisión de negocio.</td>
             </tr>
             <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;"><b>Ámbito por almacén</b></td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;">Control estricto del stock del <code>warehouse_id</code> de la <code>pos.config</code>. Nunca considera stock de otros almacenes, por decisión de negocio.</td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;"><strong>Modo tiempo real</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;">Usa <code>qty_available</code> con contexto de almacén. El descuento lo aplica el servidor vía picking; sin doble descuento en cliente.</td>
             </tr>
             <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;"><b>Modo tiempo real</b></td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;">Usa <code>qty_available</code> con contexto de almacén. El descuento lo aplica el servidor vía picking. Sin doble descuento.</td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><strong>Modo al cierre</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;">Descuenta las líneas ya pagadas de todas las sesiones abiertas sobre el mismo almacén. Cubre el escenario multi-caja.</td>
             </tr>
             <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;"><b>Modo al cierre</b></td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;">Descuenta las líneas ya pagadas de <b>todas las sesiones abiertas</b> sobre el mismo almacén. Cubre multi-caja.</td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;"><strong>Bloqueo temprano</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;">Validación al añadir cada línea al ticket. El cajero ve el error antes de seguir escaneando.</td>
             </tr>
             <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;"><b>Bloqueo temprano</b></td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;">Validación al añadir cada línea al ticket — el cajero ve el error antes de seguir escaneando.</td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><strong>Bypass con PIN</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;">Empleados autorizados pueden forzar la venta introduciendo su PIN. El autorizador queda registrado en el pedido.</td>
             </tr>
             <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;"><b>Bypass con PIN</b></td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;">Empleados autorizados pueden forzar la venta introduciendo su PIN. El autorizador queda registrado en el pedido.</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;"><b>Trazabilidad</b></td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;">Campo <code>pos.order.negative_stock_authorizer_id</code> identifica quién autorizó cada venta forzada.</td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;"><strong>Trazabilidad</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;">Campo <code>pos.order.negative_stock_authorizer_id</code> identifica quién autorizó cada venta forzada.</td>
             </tr>
         </tbody>
     </table>
 
     <!-- CONFIGURACIÓN -->
-    <h2 style="color: #2F5496; border-bottom: 2px solid #2F5496; padding-bottom: 8px; margin-top: 40px;">Configuración paso a paso</h2>
+    <h2 style="font-size: 20px; font-weight: 700; color: #0f4c81; margin: 32px 0 16px 0; padding-bottom: 8px; border-bottom: 3px solid #0f4c81;">Configuración paso a paso</h2>
 
-    <h3 style="color: #2F5496; margin-top: 28px;">1. Activar la restricción</h3>
-    <p style="line-height: 1.6;">Desde <i>Punto de Venta &gt; Configuración &gt; Ajustes</i>, seleccionar la PoS a configurar. En la sección <b>Interfaz de PoS</b> aparece la nueva opción <b>Restrict Negative Stock</b>.</p>
-    <div style="border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden; margin: 16px 0;">
+    <h3 style="font-size: 15px; font-weight: 600; color: #334155; margin: 18px 0 8px 0;">1. Activar la restricción</h3>
+    <p style="font-size: 14px; color: #334155; margin-bottom: 10px;">Desde <em>Punto de Venta › Configuración › Ajustes</em>, seleccionar la PoS a configurar. En la sección <em>Interfaz de PoS</em> aparece la nueva opción <em>Restrict Negative Stock</em>.</p>
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 16px 0;">
         <img src="screenshots/01_settings_activation.png" alt="Ajustes PoS con la opción Restrict Negative Stock activada" style="display: block; width: 100%; height: auto;"/>
-        <div style="background-color: #f8f9fa; padding: 8px 14px; font-size: 12px; color: #6c757d; border-top: 1px solid #dee2e6;">Figura 1 · Activación de la restricción en los ajustes de la PoS.</div>
+        <div style="background-color: #f8fafc; padding: 8px 14px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">Figura 1 · Activación de la restricción en los ajustes de la PoS.</div>
     </div>
 
-    <h3 style="color: #2F5496; margin-top: 28px;">2. Habilitar el bypass por PIN (opcional)</h3>
-    <p style="line-height: 1.6;">Marcar <b>Allow bypass with authoriser PIN</b> y añadir la lista de empleados autorizados. El PIN se valida contra <code>hr.employee.pin</code>.</p>
-    <div style="background-color: #fff3cd; color: #856404; padding: 12px 16px; border-radius: 4px; margin: 12px 0; font-size: 13px; border-left: 4px solid #ffc107;">
-        <b>Nota:</b> los empleados autorizadores deben tener un PIN asignado en su ficha de Recursos Humanos. Sin PIN no podrán autorizar la venta.
+    <h3 style="font-size: 15px; font-weight: 600; color: #334155; margin: 18px 0 8px 0;">2. Habilitar el bypass por PIN (opcional)</h3>
+    <p style="font-size: 14px; color: #334155; margin-bottom: 10px;">Marcar <em>Allow bypass with authoriser PIN</em> y añadir la lista de empleados autorizados. El PIN se valida contra <code>hr.employee.pin</code>.</p>
+    <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 10px 0 16px 0; font-size: 13px; color: #334155;">
+        <p style="margin: 4px 0;"><strong>Aviso:</strong> los empleados autorizadores deben tener un PIN asignado en su ficha de Recursos Humanos. Sin PIN no podrán autorizar la venta.</p>
     </div>
-    <div style="border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden; margin: 16px 0;">
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 16px 0;">
         <img src="screenshots/02_settings_authorizers.png" alt="Sección de empleados autorizadores con PIN" style="display: block; width: 100%; height: auto;"/>
-        <div style="background-color: #f8f9fa; padding: 8px 14px; font-size: 12px; color: #6c757d; border-top: 1px solid #dee2e6;">Figura 2 · Selección de empleados autorizados al bypass.</div>
+        <div style="background-color: #f8fafc; padding: 8px 14px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">Figura 2 · Selección de empleados autorizados al bypass.</div>
     </div>
 
     <!-- FLUJO DE USO -->
-    <h2 style="color: #2F5496; border-bottom: 2px solid #2F5496; padding-bottom: 8px; margin-top: 40px;">Flujo de uso en la caja</h2>
+    <h2 style="font-size: 20px; font-weight: 700; color: #0f4c81; margin: 32px 0 16px 0; padding-bottom: 8px; border-bottom: 3px solid #0f4c81;">Flujo de uso en la caja</h2>
 
-    <h3 style="color: #2F5496; margin-top: 28px;">Escenario A · Venta normal sin restricción</h3>
-    <p style="line-height: 1.6;">
-        <span style="background-color: #28a745; color: #fff; border-radius: 4px; padding: 2px 8px; font-weight: bold; font-size: 12px;">OK</span>
+    <h3 style="font-size: 15px; font-weight: 600; color: #334155; margin: 18px 0 8px 0;">Escenario A · Venta normal sin restricción</h3>
+    <p style="font-size: 14px; color: #334155; margin-bottom: 10px;">
+        <span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #d1fae5; color: #065f46; margin-right: 6px;">OK</span>
         Cuando hay stock suficiente, la experiencia del cajero es idéntica a la estándar de Odoo. El módulo no interfiere.
     </p>
 
-    <h3 style="color: #2F5496; margin-top: 28px;">Escenario B · Intento de venta sin stock, sin bypass</h3>
-    <p style="line-height: 1.6;">
-        <span style="background-color: #f8d7da; color: #721c24; border-radius: 4px; padding: 2px 8px; font-weight: bold; font-size: 12px;">BLOQUEO</span>
+    <h3 style="font-size: 15px; font-weight: 600; color: #334155; margin: 18px 0 8px 0;">Escenario B · Intento de venta sin stock, sin bypass</h3>
+    <p style="font-size: 14px; color: #334155; margin-bottom: 10px;">
+        <span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #fee2e2; color: #991b1b; margin-right: 6px;">BLOQUEO</span>
         Al añadir un producto cuya demanda acumulada excede el stock disponible en el almacén, el sistema muestra un diálogo bloqueante y no permite añadir la línea.
     </p>
-    <div style="border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden; margin: 16px 0;">
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 16px 0;">
         <img src="screenshots/03_pos_block_early.png" alt="Diálogo de bloqueo al añadir producto sin stock" style="display: block; width: 100%; height: auto;"/>
-        <div style="background-color: #f8f9fa; padding: 8px 14px; font-size: 12px; color: #6c757d; border-top: 1px solid #dee2e6;">Figura 3 · Bloqueo temprano al añadir una línea que supera el stock.</div>
+        <div style="background-color: #f8fafc; padding: 8px 14px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">Figura 3 · Bloqueo temprano al añadir una línea que supera el stock.</div>
     </div>
 
-    <h3 style="color: #2F5496; margin-top: 28px;">Escenario C · Bypass habilitado, aviso al añadir</h3>
-    <p style="line-height: 1.6;">
-        <span style="background-color: #ffc107; color: #212529; border-radius: 4px; padding: 2px 8px; font-weight: bold; font-size: 12px;">AVISO</span>
+    <h3 style="font-size: 15px; font-weight: 600; color: #334155; margin: 18px 0 8px 0;">Escenario C · Bypass habilitado, aviso al añadir</h3>
+    <p style="font-size: 14px; color: #334155; margin-bottom: 10px;">
+        <span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #fef3c7; color: #92400e; margin-right: 6px;">AVISO</span>
         Con el bypass activo, al añadir una línea que deja stock negativo el sistema muestra una advertencia informativa pero permite continuar. El PIN se pedirá al pagar.
     </p>
-    <div style="border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden; margin: 16px 0;">
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 16px 0;">
         <img src="screenshots/04_pos_warning_line.png" alt="Aviso informativo al añadir línea con bypass habilitado" style="display: block; width: 100%; height: auto;"/>
-        <div style="background-color: #f8f9fa; padding: 8px 14px; font-size: 12px; color: #6c757d; border-top: 1px solid #dee2e6;">Figura 4 · Aviso al añadir línea, con la pista de que se pedirá PIN al pagar.</div>
+        <div style="background-color: #f8fafc; padding: 8px 14px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">Figura 4 · Aviso al añadir línea, con la pista de que se pedirá PIN al pagar.</div>
     </div>
 
-    <h3 style="color: #2F5496; margin-top: 28px;">Escenario D · Autorización al pagar</h3>
-    <p style="line-height: 1.6;">
-        <span style="background-color: #fd7e14; color: #fff; border-radius: 4px; padding: 2px 8px; font-weight: bold; font-size: 12px;">PIN REQUERIDO</span>
-        Al pulsar <b>Pago</b>, si alguna línea sigue excediendo el stock, el sistema solicita el PIN de un empleado autorizador. Si el PIN es válido, se registra el autorizador en el pedido y la venta continúa. Si se cancela, se bloquea el pago.
+    <h3 style="font-size: 15px; font-weight: 600; color: #334155; margin: 18px 0 8px 0;">Escenario D · Autorización al pagar</h3>
+    <p style="font-size: 14px; color: #334155; margin-bottom: 10px;">
+        <span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #dbeafe; color: #1e40af; margin-right: 6px;">PIN REQUERIDO</span>
+        Al pulsar <em>Pago</em>, si alguna línea sigue excediendo el stock, el sistema solicita el PIN de un empleado autorizador. Si el PIN es válido, se registra el autorizador en el pedido y la venta continúa. Si se cancela, se bloquea el pago.
     </p>
-    <div style="border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden; margin: 16px 0;">
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 16px 0;">
         <img src="screenshots/05_pos_pin_dialog.png" alt="Diálogo de autorización con campo PIN" style="display: block; width: 100%; height: auto;"/>
-        <div style="background-color: #f8f9fa; padding: 8px 14px; font-size: 12px; color: #6c757d; border-top: 1px solid #dee2e6;">Figura 5 · Diálogo de autorización con el detalle de las violaciones de stock.</div>
+        <div style="background-color: #f8fafc; padding: 8px 14px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">Figura 5 · Diálogo de autorización con el detalle de las violaciones de stock.</div>
     </div>
 
-    <h3 style="color: #2F5496; margin-top: 28px;">Trazabilidad en el pedido</h3>
-    <p style="line-height: 1.6;">El pedido guarda el empleado que autorizó la excepción en el campo <code>Negative Stock Authoriser</code>, consultable desde la ficha del <code>pos.order</code> en backend.</p>
-    <div style="border: 1px solid #dee2e6; border-radius: 6px; overflow: hidden; margin: 16px 0;">
+    <h3 style="font-size: 15px; font-weight: 600; color: #334155; margin: 18px 0 8px 0;">Trazabilidad en el pedido</h3>
+    <p style="font-size: 14px; color: #334155; margin-bottom: 10px;">El pedido guarda el empleado que autorizó la excepción en el campo <em>Negative Stock Authoriser</em>, consultable desde la ficha del <code>pos.order</code> en backend.</p>
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 16px 0;">
         <img src="screenshots/06_order_authorizer.png" alt="Ficha del pedido PoS mostrando el autorizador" style="display: block; width: 100%; height: auto;"/>
-        <div style="background-color: #f8f9fa; padding: 8px 14px; font-size: 12px; color: #6c757d; border-top: 1px solid #dee2e6;">Figura 6 · Autorizador registrado en el pedido PoS.</div>
+        <div style="background-color: #f8fafc; padding: 8px 14px; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">Figura 6 · Autorizador registrado en el pedido PoS.</div>
     </div>
 
     <!-- ARQUITECTURA TÉCNICA -->
-    <h2 style="color: #2F5496; border-bottom: 2px solid #2F5496; padding-bottom: 8px; margin-top: 40px;">Cómo funciona por dentro</h2>
-    <table style="border-collapse: collapse; width: 100%; font-size: 14px; margin-bottom: 24px;">
+    <h2 style="font-size: 20px; font-weight: 700; color: #0f4c81; margin: 32px 0 16px 0; padding-bottom: 8px; border-bottom: 3px solid #0f4c81;">Cómo funciona por dentro</h2>
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0 24px 0; font-size: 13px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+        <thead>
+            <tr>
+                <th style="background: linear-gradient(180deg, #0f4c81 0%, #0d3f6b 100%); color: white; font-weight: 600; padding: 10px 14px; text-align: left; width: 35%;">Modo de actualización de stock</th>
+                <th style="background: linear-gradient(180deg, #0f4c81 0%, #0d3f6b 100%); color: white; font-weight: 600; padding: 10px 14px; text-align: left;">Comportamiento del módulo</th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
-                <th style="background-color: #2F5496; color: #ffffff; padding: 10px 14px; border: 1px solid #1f3864; text-align: left; font-weight: bold; width: 35%;">Modo de actualización de stock</th>
-                <th style="background-color: #2F5496; color: #ffffff; padding: 10px 14px; border: 1px solid #1f3864; text-align: left; font-weight: bold;">Comportamiento del módulo</th>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><strong>Tiempo real</strong><br/><span style="font-size: 12px; color: #64748b;"><code>res.company.point_of_sale_update_stock_quantities = "real"</code></span></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;">Cada orden pagada genera su <code>stock.picking</code> al momento. El módulo lee <code>qty_available</code> con el contexto del almacén de la PoS. No descuenta localmente para evitar el doble descuento.</td>
             </tr>
             <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;"><b>Tiempo real</b><br/><span style="font-size: 12px; color: #6c757d;"><code>res.company.point_of_sale_update_stock_quantities = "real"</code></span></td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;">Cada orden pagada genera su <code>stock.picking</code> al momento. El módulo lee <code>qty_available</code> con el contexto del almacén de la PoS. No descuenta localmente para evitar el doble descuento.</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;"><b>Al cierre de sesión</b><br/><span style="font-size: 12px; color: #6c757d;"><code>res.company.point_of_sale_update_stock_quantities = "closing"</code></span></td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;">Los pickings se generan al cerrar la sesión. El módulo descuenta de <code>qty_available</code> las líneas ya pagadas/finalizadas/facturadas de <b>todas las sesiones abiertas</b> con el mismo almacén, evitando sobreventa entre cajas.</td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;"><strong>Al cierre de sesión</strong><br/><span style="font-size: 12px; color: #64748b;"><code>res.company.point_of_sale_update_stock_quantities = "closing"</code></span></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;">Los pickings se generan al cerrar la sesión. El módulo descuenta de <code>qty_available</code> las líneas ya pagadas, finalizadas o facturadas de todas las sesiones abiertas con el mismo almacén, evitando sobreventa entre cajas.</td>
             </tr>
         </tbody>
     </table>
 
     <!-- LIMITACIONES -->
-    <h2 style="color: #2F5496; border-bottom: 2px solid #2F5496; padding-bottom: 8px; margin-top: 40px;">Consideraciones y limitaciones</h2>
-    <ul style="line-height: 1.8;">
-        <li>El control se realiza por <code>product.product</code>. <b>Kits y BoM fantasma no se expanden</b> a sus componentes en esta versión.</li>
-        <li>Modificar cantidad desde el numpad en una línea existente no dispara el control temprano; la validación final se realiza en cualquier caso al pulsar <b>Pago</b>.</li>
-        <li>En modo <b>tiempo real</b>, ventas locales aún no sincronizadas con el servidor pueden reflejarse con retraso. Para tolerancia cero, usar modo <b>al cierre de sesión</b>.</li>
-        <li>Solo se consideran productos con seguimiento de inventario activo (<code>is_storable = True</code>). Consumibles puros y servicios se ignoran.</li>
+    <h2 style="font-size: 20px; font-weight: 700; color: #0f4c81; margin: 32px 0 16px 0; padding-bottom: 8px; border-bottom: 3px solid #0f4c81;">Consideraciones y limitaciones</h2>
+    <ul style="font-size: 14px; color: #334155; margin-bottom: 16px; padding-left: 24px;">
+        <li style="margin-bottom: 6px;">El control se realiza por <code>product.product</code>. Los kits y BoM fantasma no se expanden a sus componentes en esta versión.</li>
+        <li style="margin-bottom: 6px;">Modificar la cantidad desde el numpad en una línea existente no dispara el control temprano. La validación final se realiza en cualquier caso al pulsar <em>Pago</em>.</li>
+        <li style="margin-bottom: 6px;">En modo tiempo real, las ventas locales aún no sincronizadas con el servidor pueden reflejarse con retraso. Para tolerancia cero, usar el modo al cierre de sesión.</li>
+        <li style="margin-bottom: 6px;">Solo se consideran productos con seguimiento de inventario activo (<code>is_storable = True</code>). Consumibles puros y servicios se ignoran.</li>
     </ul>
 
     <!-- COMPATIBILIDAD -->
-    <h2 style="color: #2F5496; border-bottom: 2px solid #2F5496; padding-bottom: 8px; margin-top: 40px;">Compatibilidad</h2>
-    <table style="border-collapse: collapse; width: 100%; font-size: 14px; margin-bottom: 24px;">
+    <h2 style="font-size: 20px; font-weight: 700; color: #0f4c81; margin: 32px 0 16px 0; padding-bottom: 8px; border-bottom: 3px solid #0f4c81;">Compatibilidad</h2>
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0 24px 0; font-size: 13px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+        <thead>
+            <tr>
+                <th style="background: linear-gradient(180deg, #0f4c81 0%, #0d3f6b 100%); color: white; font-weight: 600; padding: 10px 14px; text-align: left; width: 30%;">Elemento</th>
+                <th style="background: linear-gradient(180deg, #0f4c81 0%, #0d3f6b 100%); color: white; font-weight: 600; padding: 10px 14px; text-align: left;">Valor</th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
-                <th style="background-color: #2F5496; color: #ffffff; padding: 10px 14px; border: 1px solid #1f3864; text-align: left; font-weight: bold; width: 30%;">Elemento</th>
-                <th style="background-color: #2F5496; color: #ffffff; padding: 10px 14px; border: 1px solid #1f3864; text-align: left; font-weight: bold;">Valor</th>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><strong>Versión Odoo</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #dbeafe; color: #1e40af;">19.0</span></td>
             </tr>
             <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;">Versión Odoo</td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;"><span style="background-color: #2F5496; color: #fff; border-radius: 4px; padding: 2px 8px; font-weight: bold; font-size: 12px;">19.0</span></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;"><strong>Edición</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;">Community y Enterprise</td>
             </tr>
             <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;">Edición</td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;">Community &amp; Enterprise</td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><strong>Dependencias</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><code>point_of_sale</code>, <code>stock</code>, <code>hr</code></td>
             </tr>
             <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;">Dependencias</td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top;"><code>point_of_sale</code>, <code>stock</code>, <code>hr</code></td>
-            </tr>
-            <tr>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;">Licencia</td>
-                <td style="padding: 10px 14px; border: 1px solid #dee2e6; vertical-align: top; background-color: #f8f9fa;">LGPL-3</td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;"><strong>Licencia</strong></td>
+                <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;">LGPL-3</td>
             </tr>
         </tbody>
     </table>
 
     <!-- FOOTER -->
-    <div style="margin-top: 48px; padding: 24px; background-color: #f8f9fa; border-radius: 6px; text-align: center; border-top: 3px solid #2F5496;">
-        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #2F5496;">Desarrollado por Process Control</p>
-        <p style="margin: 0 0 4px 0; font-size: 13px; color: #6c757d;"><i>"La confianza hecha servicio"</i></p>
-        <p style="margin: 8px 0 0 0; font-size: 13px;"><a href="https://www.processcontrol.es" style="color: #2F5496; text-decoration: none; font-weight: bold;">www.processcontrol.es</a></p>
+    <div style="margin-top: 28px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8; text-align: right;">
+        ProcessControl SL — Abril 2026
     </div>
 
-</section>
+</div>
