@@ -201,17 +201,23 @@ class SaleOrder(models.Model):
         """Reduce ``pick_move`` so it carries only the MTS-reservable portion
         and return the new MTO move that holds the missing quantity. When no
         stock is available at all, the original move itself becomes the MTO
-        move (no split needed)."""
+        move (no split needed).
+
+        In v19 ``stock.move._split(qty)`` shrinks ``self`` and returns a list
+        of value dicts for the caller to create the new move with."""
         if float_is_zero(available, precision_digits=precision):
             pick_move.write({'procure_method': 'make_to_order'})
             return pick_move
-        new_move_ids = pick_move._split(missing)
-        if not new_move_ids:
+        new_move_vals = pick_move._split(missing)
+        if not new_move_vals:
             return self.env['stock.move']
-        mto_move = self.env['stock.move'].browse(new_move_ids).exists()
-        mto_move.write({'procure_method': 'make_to_order'})
-        if pick_move.picking_id and not mto_move.picking_id:
-            mto_move.write({'picking_id': pick_move.picking_id.id})
+        # ``copy_data`` (called inside _split) already brings forward the
+        # original ``move_dest_ids`` so the customer-out leg keeps chaining.
+        for vals in new_move_vals:
+            vals['procure_method'] = 'make_to_order'
+            if pick_move.picking_id:
+                vals.setdefault('picking_id', pick_move.picking_id.id)
+        mto_move = self.env['stock.move'].create(new_move_vals)
         mto_move._action_confirm(merge=False)
         return mto_move
 
