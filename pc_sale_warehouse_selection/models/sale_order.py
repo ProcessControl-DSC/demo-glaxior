@@ -242,7 +242,10 @@ class SaleOrder(models.Model):
                 'origin': self.name,
                 'reference_ids': self.stock_reference_ids,
                 'route_ids': route,
-                'move_dest_ids': [(4, mto_move.id)],
+                # ``stock.rule._get_stock_move_values`` iterates over this and
+                # reads ``.id`` on each item, so it must be a recordset rather
+                # than a list of (4, id) commands.
+                'move_dest_ids': mto_move,
             }
             procurements.append(Procurement(
                 line.product_id,
