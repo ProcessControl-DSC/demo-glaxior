@@ -203,22 +203,24 @@ class SaleOrder(models.Model):
         stock is available at all, the original move itself becomes the MTO
         move (no split needed).
 
-        In v19 ``stock.move._split(qty)`` shrinks ``self`` and returns a list
-        of value dicts for the caller to create the new move with."""
+        The new move is left **unconfirmed** on purpose: we will later run
+        the consolidation procurements with ``move_dest_ids=mto_move`` so
+        the resupply moves attach themselves as ``move_orig_ids`` of the
+        MTO move *before* it is confirmed. Only then we call
+        ``_action_confirm`` so the MTO chain is honoured (a confirm with
+        no origins yet would fire an unrouted MTO procurement and crash
+        with "no rule found")."""
         if float_is_zero(available, precision_digits=precision):
             pick_move.write({'procure_method': 'make_to_order'})
             return pick_move
         new_move_vals = pick_move._split(missing)
         if not new_move_vals:
             return self.env['stock.move']
-        # ``copy_data`` (called inside _split) already brings forward the
-        # original ``move_dest_ids`` so the customer-out leg keeps chaining.
         for vals in new_move_vals:
             vals['procure_method'] = 'make_to_order'
             if pick_move.picking_id:
                 vals.setdefault('picking_id', pick_move.picking_id.id)
         mto_move = self.env['stock.move'].create(new_move_vals)
-        mto_move._action_confirm(merge=False)
         return mto_move
 
     def _pc_chain_resupply_for_move(self, line, mto_move, missing, winner, others):
@@ -271,6 +273,11 @@ class SaleOrder(models.Model):
 
         if procurements:
             self.env['stock.rule'].run(procurements)
+        # Confirm the MTO move now that ``move_orig_ids`` has been populated
+        # by the resupply moves. Skip if it is the original pick move (it was
+        # already confirmed by ``super()._action_confirm()``).
+        if mto_move.state == 'draft':
+            mto_move._action_confirm(merge=False)
 
     @staticmethod
     def _pc_resupply_route(supplied_wh, supplier_wh):
