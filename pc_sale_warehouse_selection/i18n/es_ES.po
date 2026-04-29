@@ -94,14 +94,9 @@ msgstr ""
 "automática."
 
 #. module: pc_sale_warehouse_selection
-#: model:ir.model.fields,field_description:pc_sale_warehouse_selection.field_sale_order__pc_consolidation_picking_count
-msgid "Consolidation Transfers"
-msgstr "Transferencias de consolidación"
-
-#. module: pc_sale_warehouse_selection
-#: model_terms:ir.ui.view,arch_db:pc_sale_warehouse_selection.view_order_form_consolidation
-msgid "Consolidation"
-msgstr "Consolidación"
+#: model:ir.model.fields,field_description:pc_sale_warehouse_selection.field_sale_order__pc_picking_count
+msgid "Transfers"
+msgstr "Transferencias"
 
 #. module: pc_sale_warehouse_selection
 #. odoo-python

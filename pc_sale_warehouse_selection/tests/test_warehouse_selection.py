@@ -171,18 +171,27 @@ class TestWarehouseSelection(TransactionCase):
         self.assertEqual(order.pc_warehouse_selection_mode, 'case_b')
         self.assertTrue(order.pc_requires_consolidation)
 
-        # Inter-warehouse pickings (consolidation transfers) must have been
-        # created under the SO's origin. Check via the helper the smart
-        # button uses, which also populates pc_consolidation_picking_count.
-        consol_pickings = order._pc_get_consolidation_pickings()
+        # All transfers (customer pick + customer delivery + inter-warehouse
+        # consolidation) must have been created under the SO's origin. The
+        # helper backs the smart button counter ``pc_picking_count``.
+        all_pickings = order._pc_get_all_pickings()
         self.assertTrue(
-            consol_pickings,
-            "Expected inter-warehouse pickings created for consolidation",
+            all_pickings,
+            "Expected pickings created for the SO",
         )
         self.assertEqual(
-            order.pc_consolidation_picking_count,
-            len(consol_pickings),
+            order.pc_picking_count,
+            len(all_pickings),
             "The smart button counter must match the helper result",
+        )
+        # Inter-warehouse pickings are the ones whose warehouse differs
+        # from the winner's.
+        consol_pickings = all_pickings.filtered(
+            lambda p: p.picking_type_id.warehouse_id != self.wh_e
+        )
+        self.assertTrue(
+            consol_pickings,
+            "Expected inter-warehouse pickings for consolidation",
         )
         consol_moves = consol_pickings.mapped('move_ids').filtered(
             lambda m: m.product_id == product

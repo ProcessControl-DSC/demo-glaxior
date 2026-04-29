@@ -15,15 +15,15 @@
                        invisible="not pc_requires_consolidation"/>
             </xpath>
             <xpath expr="//button[@name='action_view_delivery']" position="after">
-                <button name="action_view_pc_consolidation_pickings"
+                <button name="action_view_pc_pickings"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-exchange"
-                        invisible="pc_consolidation_picking_count == 0"
+                        icon="fa-truck"
+                        invisible="pc_picking_count == 0"
                         groups="stock.group_stock_user">
-                    <field name="pc_consolidation_picking_count"
+                    <field name="pc_picking_count"
                            widget="statinfo"
-                           string="Consolidation"/>
+                           string="Transfers"/>
                 </button>
             </xpath>
         </field>

@@ -29,33 +29,28 @@ class SaleOrder(models.Model):
         copy=False,
         help="Virtual warehouse set on the sale order before auto-selection.",
     )
-    pc_consolidation_picking_count = fields.Integer(
-        string='Consolidation Transfers',
-        compute='_compute_pc_consolidation_picking_count',
+    pc_picking_count = fields.Integer(
+        string='Transfers',
+        compute='_compute_pc_picking_count',
     )
 
     @api.depends('name', 'picking_ids')
-    def _compute_pc_consolidation_picking_count(self):
+    def _compute_pc_picking_count(self):
         for order in self:
-            order.pc_consolidation_picking_count = len(
-                order._pc_get_consolidation_pickings()
-            )
+            order.pc_picking_count = len(order._pc_get_all_pickings())
 
-    def _pc_get_consolidation_pickings(self):
-        """Return pickings linked to this SO via ``origin`` that are not part
-        of ``picking_ids`` -- i.e. the inter-warehouse transfers that feed
-        stock to the winner warehouse before the customer delivery."""
+    def _pc_get_all_pickings(self):
+        """All pickings linked to this SO via ``origin`` -- includes the
+        customer pick + delivery and any inter-warehouse consolidation
+        transfers triggered by the auto-selection."""
         self.ensure_one()
         if not self.name:
             return self.env['stock.picking']
-        return self.env['stock.picking'].search([
-            ('origin', '=', self.name),
-            ('id', 'not in', self.picking_ids.ids),
-        ])
+        return self.env['stock.picking'].search([('origin', '=', self.name)])
 
-    def action_view_pc_consolidation_pickings(self):
+    def action_view_pc_pickings(self):
         self.ensure_one()
-        pickings = self._pc_get_consolidation_pickings()
+        pickings = self._pc_get_all_pickings()
         action = self.env['ir.actions.act_window']._for_xml_id(
             'stock.action_picking_tree_all'
         )
@@ -192,12 +187,16 @@ class SaleOrder(models.Model):
                 continue
             self._pc_chain_resupply_for_move(line, mto_move, missing, winner, others)
 
-        # Force the customer pick to behave all-or-nothing so the operator
-        # cannot ship the MTS portion while the MTO portion is still in
-        # transit, and refresh its state to reflect the new waiting moves.
-        if affected_pickings:
-            affected_pickings.write({'move_type': 'one'})
-            affected_pickings._compute_state()
+        # Force the customer pick AND the downstream customer delivery to
+        # behave all-or-nothing so the operator cannot ship a partial order
+        # while the MTO portion is still in transit. Also refresh state.
+        downstream_pickings = self.env['stock.picking']
+        for pkg in affected_pickings:
+            downstream_pickings |= pkg.move_ids.move_dest_ids.picking_id
+        all_to_lock = affected_pickings | downstream_pickings
+        if all_to_lock:
+            all_to_lock.write({'move_type': 'one'})
+            all_to_lock._compute_state()
 
     def _pc_winner_pick_move_for(self, line, winner):
         """The first move in the customer pick that originates from the
