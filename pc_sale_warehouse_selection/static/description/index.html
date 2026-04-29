@@ -1,0 +1,140 @@
+<div style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: #1e293b; line-height: 1.6; max-width: 1000px; margin: 0 auto; padding: 24px;">
+
+<h2 style="font-size: 22px; font-weight: 700; color: #0f4c81; margin: 0 0 16px 0; padding-bottom: 8px; border-bottom: 3px solid #0f4c81;">
+  Selección automática de almacén y consolidación entre almacenes
+</h2>
+
+<p style="font-size: 14px; color: #334155; margin-bottom: 12px;">
+  <strong>Versión:</strong> 19.0.1.2.0 ·
+  <strong>Compatibilidad:</strong> Odoo 19 Enterprise ·
+  <strong>Licencia:</strong> LGPL-3 ·
+  <strong>Autor:</strong> <a href="https://www.processcontrol.es" style="color: #0f4c81;">Process Control</a>
+</p>
+
+<div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 14px 0 20px 0; font-size: 13px; color: #334155;">
+  <p style="margin: 4px 0;">Cuando un pedido de venta se confirma contra un almacén virtual agregador, este módulo reasigna el pedido al almacén físico hijo con mejor cobertura y, si hace falta, dispara automáticamente las transferencias internas para consolidar el stock antes de la salida al cliente.</p>
+</div>
+
+<h3 style="font-size: 17px; font-weight: 700; color: #0f4c81; margin: 24px 0 10px 0; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0;">¿Qué resuelve?</h3>
+
+<p style="font-size: 14px; color: #334155; margin-bottom: 10px;">Las empresas con varios almacenes físicos y stock repartido necesitan, al recibir un pedido, decidir desde dónde se sirve y, si el reparto del stock no permite servir desde un único almacén, mover internamente el material para consolidarlo antes de la salida. Hacerlo manualmente es lento y propenso a errores.</p>
+
+<p style="font-size: 14px; color: #334155; margin-bottom: 10px;">Este módulo automatiza esa decisión: el comercial sigue eligiendo el almacén virtual habitual y el sistema se encarga del resto.</p>
+
+<h3 style="font-size: 17px; font-weight: 700; color: #0f4c81; margin: 24px 0 10px 0; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0;">Criterio de selección</h3>
+
+<ul style="font-size: 14px; color: #334155; margin-bottom: 10px; padding-left: 24px;">
+  <li style="margin-bottom: 6px;">Cobertura calculada por pedido completo (no línea a línea).</li>
+  <li style="margin-bottom: 6px;">Gana el almacén físico que más cantidad del pedido puede aportar con su stock.</li>
+  <li style="margin-bottom: 6px;">Empate determinista: por secuencia del almacén y, en último término, por ID.</li>
+</ul>
+
+<h3 style="font-size: 17px; font-weight: 700; color: #0f4c81; margin: 24px 0 10px 0; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0;">Configuración</h3>
+
+<ol style="font-size: 14px; color: #334155; margin-bottom: 10px; padding-left: 24px;">
+  <li style="margin-bottom: 6px;">Activar en Inventario → Configuración → Ajustes las opciones <em>Storage Locations</em> y <em>Multi-Step Routes</em>.</li>
+  <li style="margin-bottom: 6px;">Crear los almacenes físicos en 2 pasos de entrega y un almacén virtual agregador con la ubicación de stock tipo <em>view</em> y las ubicaciones de los físicos reparentadas debajo.</li>
+  <li style="margin-bottom: 6px;">En el formulario de cada almacén físico, en la sección Reabastecer desde, marcar los demás almacenes físicos. Eso crea automáticamente las rutas inter-almacén que el módulo usa en el Caso B.</li>
+  <li style="margin-bottom: 6px;">Instalar el módulo.</li>
+  <li style="margin-bottom: 6px;">En el almacén virtual, en la sección Reabastecer, marcar el checkbox <strong>Almacén virtual agregador</strong> y enumerar los almacenes hijos en <strong>Almacenes físicos hijos</strong>.</li>
+</ol>
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="screenshots/03_vwh_form.png" style="max-width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);" alt="Formulario del almacén virtual"/>
+  <p style="font-size: 12px; color: #64748b; font-style: italic; margin: 6px 0 0 0;">Configuración del almacén virtual con sus tres almacenes hijos.</p>
+</div>
+
+<h3 style="font-size: 17px; font-weight: 700; color: #0f4c81; margin: 24px 0 10px 0; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0;">Caso A — un almacén cubre el 100%</h3>
+
+<p style="font-size: 14px; color: #334155; margin-bottom: 10px;">El comercial crea el pedido contra el almacén virtual. Al confirmar, el sistema detecta que un único almacén físico cubre el 100% de la demanda, reasigna el pedido a ese almacén y deja que Odoo genere el flujo Pick + Out estándar. Sin movimientos extra.</p>
+
+<table style="width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0 20px 0; font-size: 13px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+  <thead>
+    <tr>
+      <th style="background: linear-gradient(180deg, #0f4c81 0%, #0d3f6b 100%); color: white; font-weight: 600; padding: 10px 14px; text-align: left;">Variante</th>
+      <th style="background: linear-gradient(180deg, #0f4c81 0%, #0d3f6b 100%); color: white; font-weight: 600; padding: 10px 14px; text-align: left;">Comportamiento</th>
+      <th style="background: linear-gradient(180deg, #0f4c81 0%, #0d3f6b 100%); color: white; font-weight: 600; padding: 10px 14px; text-align: left;">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><strong>Mono-producto</strong></td>
+      <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;">Reasigna al almacén que tiene stock; un Pick desde ese almacén.</td>
+      <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #d1fae5; color: #065f46;">Listo</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;"><strong>Cambio de almacén</strong></td>
+      <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;">El almacén habitual no tiene stock pero otro físico sí: el sistema cambia automáticamente a ese.</td>
+      <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155; background: #f1f6fb;"><span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #d1fae5; color: #065f46;">Listo</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><strong>Multi-producto</strong></td>
+      <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;">Cobertura por pedido entero; el almacén que cubre todas las líneas gana.</td>
+      <td style="padding: 10px 14px; border-bottom: 1px solid #e8ecf1; color: #334155;"><span style="display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #d1fae5; color: #065f46;">Listo</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="screenshots/04_so_case_a_s00021.png" style="max-width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);" alt="Pedido caso A confirmado"/>
+  <p style="font-size: 12px; color: #64748b; font-style: italic; margin: 6px 0 0 0;">Pedido reasignado al almacén físico ganador en el Caso A.</p>
+</div>
+
+<h3 style="font-size: 17px; font-weight: 700; color: #0f4c81; margin: 24px 0 10px 0; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0;">Caso B — consolidación automática</h3>
+
+<p style="font-size: 14px; color: #334155; margin-bottom: 10px;">Cuando ningún almacén cubre el pedido por sí solo, el sistema:</p>
+
+<ol style="font-size: 14px; color: #334155; margin-bottom: 10px; padding-left: 24px;">
+  <li style="margin-bottom: 6px;">Reasigna el pedido al almacén que más unidades aporta.</li>
+  <li style="margin-bottom: 6px;">Divide cada movimiento del Pick al cliente en una porción <em>make-to-stock</em> (lo que se reserva del stock disponible) y otra <em>make-to-order</em> (las unidades faltantes).</li>
+  <li style="margin-bottom: 6px;">Lanza desde los demás almacenes físicos los aprovisionamientos necesarios, encadenados con la porción <em>make-to-order</em> mediante <code>move_dest_ids</code>.</li>
+  <li style="margin-bottom: 6px;">El Pick al cliente queda en estado <em>en espera</em> hasta que llega todo el stock al almacén ganador. Solo entonces pasa a Listo.</li>
+</ol>
+
+<div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 10px 0 16px 0; font-size: 13px; color: #334155;">
+  <p style="margin: 4px 0;"><strong>Resultado clave.</strong> Nunca se procesa el Pick al cliente con cantidades a medias. La cadena MTS + MTO garantiza que el operario solo ve el Pick listo cuando todo el material está consolidado.</p>
+</div>
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="screenshots/06_so_case_b_s00026_main.png" style="max-width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);" alt="Pedido caso B con smart buttons Entrega y Consolidación"/>
+  <p style="font-size: 12px; color: #64748b; font-style: italic; margin: 6px 0 0 0;">Pedido en Caso B con los smart buttons Entrega y Consolidación visibles.</p>
+</div>
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="screenshots/07_so_case_b_s00026_other_info.png" style="max-width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);" alt="Campos de trazabilidad del pedido"/>
+  <p style="font-size: 12px; color: #64748b; font-style: italic; margin: 6px 0 0 0;">Pestaña Otra información: modo de selección, almacén virtual original y consolidación requerida.</p>
+</div>
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="screenshots/09_consolidation_pickings_expanded.png" style="max-width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);" alt="Listado de transferencias inter-almacén"/>
+  <p style="font-size: 12px; color: #64748b; font-style: italic; margin: 6px 0 0 0;">Listado de las transferencias entre almacenes que alimentan al ganador.</p>
+</div>
+
+<h3 style="font-size: 17px; font-weight: 700; color: #0f4c81; margin: 24px 0 10px 0; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0;">Trazabilidad en el pedido</h3>
+
+<ul style="font-size: 14px; color: #334155; margin-bottom: 10px; padding-left: 24px;">
+  <li style="margin-bottom: 6px;"><strong>Modo de selección de almacén</strong> — caso aplicado: un almacén cubre, consolidación necesaria o sin stock.</li>
+  <li style="margin-bottom: 6px;"><strong>Almacén virtual original</strong> — el almacén virtual que el comercial eligió antes de la reasignación automática.</li>
+  <li style="margin-bottom: 6px;"><strong>Requiere consolidación entre almacenes</strong> — bandera marcada cuando el pedido entra en Caso B.</li>
+  <li style="margin-bottom: 6px;"><strong>Transferencias de consolidación</strong> — contador visible como smart button que abre el listado de movimientos inter-almacén asociados.</li>
+</ul>
+
+<h3 style="font-size: 17px; font-weight: 700; color: #0f4c81; margin: 24px 0 10px 0; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0;">Consideraciones operativas</h3>
+
+<div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 10px 0 16px 0; font-size: 13px; color: #334155;">
+  <p style="margin: 4px 0;"><strong>Decisión al confirmar.</strong> La elección del ganador se fija en el momento de confirmar el pedido y no se recalcula si el stock varía después. Para revaluar, cancelar y reconfirmar.</p>
+  <p style="margin: 4px 0;"><strong>Líneas elegibles.</strong> Solo participan en el cálculo las líneas con productos almacenables y cantidad positiva. Servicios y productos descargables se ignoran.</p>
+  <p style="margin: 4px 0;"><strong>Sin stock.</strong> Si ningún almacén tiene stock del pedido, el sistema deja el almacén virtual y registra el modo Sin stock disponible para que el equipo funcional decida la siguiente acción.</p>
+</div>
+
+<h3 style="font-size: 17px; font-weight: 700; color: #0f4c81; margin: 24px 0 10px 0; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0;">Soporte</h3>
+
+<p style="font-size: 14px; color: #334155; margin-bottom: 10px;">
+  Process Control — <a href="https://www.processcontrol.es" style="color: #0f4c81;">https://www.processcontrol.es</a>
+</p>
+
+<div style="margin-top: 28px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8; text-align: right;">
+  ProcessControl SL — Abril 2026
+</div>
+
+</div>

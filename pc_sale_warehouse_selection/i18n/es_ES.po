@@ -1,0 +1,111 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pc_sale_warehouse_selection
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-29 00:00+0000\n"
+"PO-Revision-Date: 2026-04-29 00:00+0000\n"
+"Last-Translator: Process Control <info@processcontrol.es>\n"
+"Language-Team: Spanish (Spain) <es_ES@processcontrol.es>\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model,name:pc_sale_warehouse_selection.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model,name:pc_sale_warehouse_selection.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Almacén"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields,field_description:pc_sale_warehouse_selection.field_stock_warehouse__is_virtual_warehouse
+msgid "Virtual Aggregator Warehouse"
+msgstr "Almacén virtual agregador"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields,help:pc_sale_warehouse_selection.field_stock_warehouse__is_virtual_warehouse
+msgid ""
+"When checked, sale orders confirmed against this warehouse will be "
+"automatically reassigned to the physical child warehouse with the best "
+"stock coverage."
+msgstr ""
+"Si está marcado, los pedidos de venta confirmados contra este almacén "
+"se reasignarán automáticamente al almacén físico hijo que mejor cubra "
+"la demanda."
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields,field_description:pc_sale_warehouse_selection.field_stock_warehouse__pc_child_warehouse_ids
+msgid "Physical Child Warehouses"
+msgstr "Almacenes físicos hijos"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields,help:pc_sale_warehouse_selection.field_stock_warehouse__pc_child_warehouse_ids
+msgid ""
+"Physical warehouses whose stock is aggregated by this virtual warehouse "
+"and that participate in the auto-selection and consolidation logic."
+msgstr ""
+"Almacenes físicos cuyo stock se agrega en este almacén virtual y que "
+"participan en la lógica de selección automática y consolidación."
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields,field_description:pc_sale_warehouse_selection.field_sale_order__pc_warehouse_selection_mode
+msgid "Warehouse Selection Mode"
+msgstr "Modo de selección de almacén"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields.selection,name:pc_sale_warehouse_selection.selection__sale_order__pc_warehouse_selection_mode__case_a
+msgid "Single Warehouse Covers"
+msgstr "Un único almacén cubre"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields.selection,name:pc_sale_warehouse_selection.selection__sale_order__pc_warehouse_selection_mode__case_b
+msgid "Consolidation Required"
+msgstr "Consolidación necesaria"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields.selection,name:pc_sale_warehouse_selection.selection__sale_order__pc_warehouse_selection_mode__no_stock
+msgid "No Stock Available"
+msgstr "Sin stock disponible"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields,field_description:pc_sale_warehouse_selection.field_sale_order__pc_requires_consolidation
+msgid "Requires Inter-Warehouse Consolidation"
+msgstr "Requiere consolidación entre almacenes"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields,field_description:pc_sale_warehouse_selection.field_sale_order__pc_original_warehouse_id
+msgid "Original Virtual Warehouse"
+msgstr "Almacén virtual original"
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields,help:pc_sale_warehouse_selection.field_sale_order__pc_original_warehouse_id
+msgid "Virtual warehouse set on the sale order before auto-selection."
+msgstr ""
+"Almacén virtual fijado en el pedido de venta antes de la selección "
+"automática."
+
+#. module: pc_sale_warehouse_selection
+#: model:ir.model.fields,field_description:pc_sale_warehouse_selection.field_sale_order__pc_consolidation_picking_count
+msgid "Consolidation Transfers"
+msgstr "Transferencias de consolidación"
+
+#. module: pc_sale_warehouse_selection
+#: model_terms:ir.ui.view,arch_db:pc_sale_warehouse_selection.view_order_form_consolidation
+msgid "Consolidation"
+msgstr "Consolidación"
+
+#. module: pc_sale_warehouse_selection
+#. odoo-python
+#: code:addons/pc_sale_warehouse_selection/models/sale_order.py:0
+#, python-format
+msgid "Consolidation for %s"
+msgstr "Consolidación de %s"

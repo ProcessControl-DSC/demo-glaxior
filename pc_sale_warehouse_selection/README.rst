@@ -16,9 +16,12 @@ Funcionalidades
 * **Caso A** — el mejor almacén cubre el 100% de la demanda: el pedido se
   reasigna a ese almacén y el flujo *Pick + Out* se genera de forma nativa.
 * **Caso B** — ningún almacén cubre solo: el pedido se reasigna al que más
-  aporta, y desde los demás se lanzan aprovisionamientos hacia el ganador a
-  través de las rutas *Resupply from another warehouse*, consolidando el
-  stock en el almacén elegido antes de la salida al cliente.
+  aporta, su movimiento de salida se divide en una porción
+  *make-to-stock* (lo que reserva del stock disponible) y otra
+  *make-to-order* (lo que falta), y se lanzan aprovisionamientos desde los
+  demás almacenes encadenados con la porción MTO mediante
+  ``move_dest_ids``. El *Pick* al cliente queda en *waiting* hasta que
+  todas las llegadas inter-almacén estén completadas.
 * **Desempate determinista** por secuencia del almacén y, en último término,
   por ID.
 * **Sin stock** en ningún almacén → el pedido se deja contra el almacén
@@ -65,6 +68,11 @@ En todos los casos queda registrado en el pedido:
   entre almacenes.
 * **Original Virtual Warehouse** — el almacén virtual original, para
   trazabilidad.
+
+Además, un smart button **Consolidación** en el pedido lista las
+transferencias inter-almacén asociadas (las que se ven también en
+*Inventario → Operaciones → Transferencias* filtrando por documento de
+origen).
 
 Datos técnicos
 ==============
