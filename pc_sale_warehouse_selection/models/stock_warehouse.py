@@ -20,3 +20,13 @@ class StockWarehouse(models.Model):
         help="Physical warehouses that the virtual aggregator pulls stock "
              "from. Only used when 'Virtual Aggregator Warehouse' is set.",
     )
+    pc_consolidation_location_id = fields.Many2one(
+        comodel_name='stock.location',
+        string='Consolidation Location',
+        domain="[('usage', '=', 'internal')]",
+        help="Location where inter-warehouse transfers land before being "
+             "picked for the customer. Must be a child of the warehouse "
+             "stock location so the customer pick can reserve from it. "
+             "If left empty, consolidation lands directly on the warehouse "
+             "stock location (legacy behaviour).",
+    )

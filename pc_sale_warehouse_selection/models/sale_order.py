@@ -244,6 +244,9 @@ class SaleOrder(models.Model):
         date_deadline = self.commitment_date or fields.Datetime.now()
         procurements = []
 
+        # Procurement target: the warehouse-specific consolidation location
+        # if configured, else the default stock location (legacy behaviour).
+        consolidation_location = winner.pc_consolidation_location_id or winner.lot_stock_id
         for other in others.sorted(lambda w: (w.sequence, w.id)):
             if float_compare(missing, 0.0, precision_digits=precision) <= 0:
                 break
@@ -272,7 +275,7 @@ class SaleOrder(models.Model):
                 line.product_id,
                 take,
                 line.product_uom_id,
-                winner.lot_stock_id,
+                consolidation_location,
                 _("Consolidation for %s", self.name),
                 self.name,
                 self.company_id,

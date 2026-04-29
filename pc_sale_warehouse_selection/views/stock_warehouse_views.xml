@@ -13,6 +13,8 @@
                        invisible="not is_virtual_warehouse"
                        required="is_virtual_warehouse"
                        options="{'no_create': True}"/>
+                <field name="pc_consolidation_location_id"
+                       options="{'no_create': True}"/>
             </xpath>
         </field>
     </record>
