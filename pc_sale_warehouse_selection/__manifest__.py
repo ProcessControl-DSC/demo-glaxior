@@ -42,7 +42,7 @@ Developed by Process Control -- https://www.processcontrol.es
     'author': 'Process Control',
     'website': 'https://www.processcontrol.es',
     'category': 'Sales/Sales',
-    'version': '19.0.1.5.0',
+    'version': '19.0.1.5.1',
     'license': 'LGPL-3',
     'depends': [
         'sale_stock',
@@ -55,4 +55,5 @@ Developed by Process Control -- https://www.processcontrol.es
     'installable': True,
     'application': False,
     'auto_install': False,
+    'post_init_hook': '_post_init_hook',
 }

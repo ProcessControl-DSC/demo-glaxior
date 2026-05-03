@@ -62,6 +62,27 @@ class SaleOrder(models.Model):
         return action
 
     # ------------------------------------------------------------------
+    # Cancellation flow
+    # ------------------------------------------------------------------
+    def _action_cancel(self):
+        """Cancel the inter-warehouse consolidation transfers triggered by
+        this sale order along with the standard cancel. Without this hook
+        those pickings keep their stock reservations active and starve the
+        next sale order that targets the same products and locations."""
+        cancel_pickings = self.env['stock.picking']
+        for order in self:
+            if not order.name:
+                continue
+            cancel_pickings |= order._pc_get_all_pickings().filtered(
+                lambda p: p.state not in ('done', 'cancel')
+                and p.id not in order.picking_ids.ids
+            )
+        res = super()._action_cancel()
+        if cancel_pickings:
+            cancel_pickings.action_cancel()
+        return res
+
+    # ------------------------------------------------------------------
     # Confirmation flow
     # ------------------------------------------------------------------
     def _action_confirm(self):
@@ -187,13 +208,27 @@ class SaleOrder(models.Model):
                 continue
             self._pc_chain_resupply_for_move(line, mto_move, missing, winner, others)
 
-        # Force the customer pick AND the downstream customer delivery to
-        # behave all-or-nothing so the operator cannot ship a partial order
-        # while the MTO portion is still in transit. Also refresh state.
+        # Force the customer pick, the downstream customer delivery and the
+        # consolidation receipt to behave all-or-nothing. Without this:
+        #   - the customer pick / delivery could ship the MTS portion alone
+        #     before the MTO arrived,
+        #   - the consolidation receipt at the winner (the IN picking that
+        #     lands on the Consolidation location) could be validated as
+        #     soon as the first inter-warehouse transfer arrives, leaving
+        #     the rest of the moves of that same picking in waiting.
         downstream_pickings = self.env['stock.picking']
         for pkg in affected_pickings:
             downstream_pickings |= pkg.move_ids.move_dest_ids.picking_id
-        all_to_lock = affected_pickings | downstream_pickings
+        # Consolidation receipts: pickings landing on the winner's
+        # consolidation location (or any descendant of it).
+        consolidation_pickings = self.env['stock.picking']
+        consol_loc = winner.pc_consolidation_location_id or winner.lot_stock_id
+        if consol_loc:
+            consolidation_pickings = self.env['stock.picking'].search([
+                ('origin', '=', self.name),
+                ('location_dest_id', 'child_of', consol_loc.id),
+            ])
+        all_to_lock = affected_pickings | downstream_pickings | consolidation_pickings
         if all_to_lock:
             all_to_lock.write({'move_type': 'one'})
             all_to_lock._compute_state()
