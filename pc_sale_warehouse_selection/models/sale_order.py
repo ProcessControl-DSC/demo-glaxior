@@ -7,6 +7,26 @@ from odoo.tools.float_utils import float_compare, float_is_zero
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    @api.model
+    def _pc_default_virtual_warehouse(self):
+        """If the active company has a virtual aggregator warehouse with at
+        least one physical child, use it as the default warehouse for new
+        sale orders. Falls back to the standard Odoo default otherwise."""
+        return self.env['stock.warehouse'].search([
+            ('is_virtual_warehouse', '=', True),
+            ('pc_child_warehouse_ids', '!=', False),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+
+    warehouse_id = fields.Many2one(
+        default=lambda self: (
+            self._pc_default_virtual_warehouse()
+            or self.env['stock.warehouse'].search(
+                [('company_id', '=', self.env.company.id)], limit=1
+            )
+        ),
+    )
+
     pc_warehouse_selection_mode = fields.Selection(
         selection=[
             ('case_a', 'Single Warehouse Covers'),
