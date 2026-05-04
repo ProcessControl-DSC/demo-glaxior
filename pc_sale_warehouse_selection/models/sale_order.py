@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from odoo import _, api, fields, models
-from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.float_utils import float_compare
 
 
 class SaleOrder(models.Model):
@@ -188,15 +188,22 @@ class SaleOrder(models.Model):
     # ------------------------------------------------------------------
     def _pc_build_consolidation_chain(self):
         """For each eligible line whose demand exceeds the stock available
-        in the winner warehouse, split the customer pick move into two:
+        in the winner warehouse, attach inter-warehouse resupply
+        procurements as ``move_orig_ids`` of the customer pick move.
 
-          * an MTS portion equal to ``available`` (reserves stock right away);
-          * an MTO portion equal to the missing quantity, chained backwards
-            to inter-warehouse resupply moves.
+        Unlike the previous implementation, we do NOT split the customer
+        pick move. The pick move keeps its original demand (e.g. 25 uds)
+        and the partial reservation already done by ``super()._action_confirm()``
+        (e.g. 20 uds). The procurements we trigger here only cover the
+        missing quantity (5 uds) and target the consolidation location;
+        the inter-warehouse arrivals attach themselves as ``move_orig_ids``
+        of the customer pick move so the latter switches to ``waiting``
+        until the chain is complete and then auto-reserves the missing
+        quantity from the consolidation location.
 
-        The MTO portion's ``move_orig_ids`` will be populated by the
-        procurement engine, so the customer pick cannot start until the
-        consolidation is complete.
+        Result: a single line per product in the customer pick, with
+        demand = total order qty and quantity gradually rising from
+        ``reserved`` to ``demand`` as the consolidation completes.
         """
         self.ensure_one()
         winner = self.warehouse_id
@@ -214,19 +221,12 @@ class SaleOrder(models.Model):
                 continue
             if pick_move.picking_id:
                 affected_pickings |= pick_move.picking_id
-            # ``super()._action_confirm()`` already reserved every unit of
-            # ``pick_move`` that the winner had physically on hand. The MTS
-            # portion is exactly what the move could grab; the rest is the
-            # quantity we have to bring in from other warehouses.
             reserved = pick_move.quantity
             demand = pick_move.product_uom_qty
             if float_compare(demand, reserved, precision_digits=precision) <= 0:
                 continue
             missing = demand - reserved
-            mto_move = self._pc_split_pick_move(pick_move, missing, reserved, precision)
-            if not mto_move:
-                continue
-            self._pc_chain_resupply_for_move(line, mto_move, missing, winner, others)
+            self._pc_chain_resupply_for_move(line, pick_move, missing, winner, others)
 
         # Force the customer pick, the downstream customer delivery and the
         # consolidation receipt to behave all-or-nothing. Without this:
@@ -261,35 +261,9 @@ class SaleOrder(models.Model):
             and m.state not in ('done', 'cancel')
         )[:1]
 
-    def _pc_split_pick_move(self, pick_move, missing, available, precision):
-        """Reduce ``pick_move`` so it carries only the MTS-reservable portion
-        and return the new MTO move that holds the missing quantity. When no
-        stock is available at all, the original move itself becomes the MTO
-        move (no split needed).
-
-        The new move is left **unconfirmed** on purpose: we will later run
-        the consolidation procurements with ``move_dest_ids=mto_move`` so
-        the resupply moves attach themselves as ``move_orig_ids`` of the
-        MTO move *before* it is confirmed. Only then we call
-        ``_action_confirm`` so the MTO chain is honoured (a confirm with
-        no origins yet would fire an unrouted MTO procurement and crash
-        with "no rule found")."""
-        if float_is_zero(available, precision_digits=precision):
-            pick_move.write({'procure_method': 'make_to_order'})
-            return pick_move
-        new_move_vals = pick_move._split(missing)
-        if not new_move_vals:
-            return self.env['stock.move']
-        for vals in new_move_vals:
-            vals['procure_method'] = 'make_to_order'
-            if pick_move.picking_id:
-                vals.setdefault('picking_id', pick_move.picking_id.id)
-        mto_move = self.env['stock.move'].create(new_move_vals)
-        return mto_move
-
-    def _pc_chain_resupply_for_move(self, line, mto_move, missing, winner, others):
+    def _pc_chain_resupply_for_move(self, line, pick_move, missing, winner, others):
         """Run resupply procurements that feed ``winner.lot_stock_id`` and
-        chain (via ``move_dest_ids``) to ``mto_move`` so the customer pick
+        chain (via ``move_dest_ids``) to ``pick_move`` so the customer pick
         waits until the inter-warehouse stock has arrived."""
         self.ensure_one()
         if not self.stock_reference_ids:
@@ -324,7 +298,7 @@ class SaleOrder(models.Model):
                 # ``stock.rule._get_stock_move_values`` iterates over this and
                 # reads ``.id`` on each item, so it must be a recordset rather
                 # than a list of (4, id) commands.
-                'move_dest_ids': mto_move,
+                'move_dest_ids': pick_move,
             }
             procurements.append(Procurement(
                 line.product_id,
@@ -340,11 +314,11 @@ class SaleOrder(models.Model):
 
         if procurements:
             self.env['stock.rule'].run(procurements)
-        # Confirm the MTO move now that ``move_orig_ids`` has been populated
-        # by the resupply moves. Skip if it is the original pick move (it was
-        # already confirmed by ``super()._action_confirm()``).
-        if mto_move.state == 'draft':
-            mto_move._action_confirm(merge=False)
+        # The pick_move is already confirmed (super did it). After attaching
+        # the upstream chain via move_orig_ids, force a re-evaluation of its
+        # state so it switches from ``assigned`` (with partial reservation)
+        # to ``partially_available`` until the chain delivers the rest.
+        pick_move._compute_state()
 
     @staticmethod
     def _pc_resupply_route(supplied_wh, supplier_wh):
