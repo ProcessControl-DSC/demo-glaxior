@@ -318,7 +318,7 @@ class SaleOrder(models.Model):
         # the upstream chain via move_orig_ids, force a re-evaluation of its
         # state so it switches from ``assigned`` (with partial reservation)
         # to ``partially_available`` until the chain delivers the rest.
-        pick_move._compute_state()
+        pick_move._recompute_state()
 
     @staticmethod
     def _pc_resupply_route(supplied_wh, supplier_wh):
