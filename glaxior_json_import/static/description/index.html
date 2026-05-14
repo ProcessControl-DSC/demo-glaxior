@@ -1,0 +1,166 @@
+<section style="max-width:1000px;margin:0 auto;padding:24px;font-family:Inter,'Segoe UI',Arial,sans-serif;color:#334155;font-size:14px;line-height:1.6;background:#ffffff;">
+
+  <header style="padding:24px 28px;border-radius:12px;background:linear-gradient(135deg,#0f4c81 0%,#1a6bb8 100%);color:#ffffff;margin-bottom:24px;">
+    <div style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-bottom:6px;">Manual de usuario</div>
+    <h1 style="margin:0;font-size:26px;font-weight:600;color:#ffffff;">Importación JSON Configurador MyGlaxior</h1>
+    <p style="margin:10px 0 0;opacity:.92;font-size:14px;">Crea pedidos de venta en Odoo a partir de los ficheros JSON generados por el configurador MyGlaxior, con toda la información de la estructura y el JSON original adjunto al pedido.</p>
+  </header>
+
+  <div style="border-left:4px solid #0f4c81;background:#f1f6fb;padding:16px 18px;border-radius:0 8px 8px 0;margin-bottom:24px;">
+    <strong style="color:#0f4c81;">En una frase:</strong> sube el JSON del configurador, revisa la previsualización, indica cliente y precio, y el sistema crea el pedido de venta con la línea descriptiva, los campos clave y el JSON original adjunto para fábrica.
+  </div>
+
+  <h2 style="font-size:20px;color:#0f4c81;border-bottom:2px solid #0f4c81;padding-bottom:6px;margin:32px 0 16px;">1. Acceso al asistente</h2>
+  <p>El acceso se encuentra en el menú <em>Ventas → Pedidos → Importar JSON MyGlaxior</em>. Es la última entrada del menú Pedidos.</p>
+  <p style="margin:18px 0;text-align:center;">
+    <img src="01_menu_importar_json.png" alt="Menú Pedidos con la opción Importar JSON MyGlaxior" style="max-width:100%;border:1px solid #d9e2ec;border-radius:8px;box-shadow:0 2px 8px rgba(15,76,129,0.08);"/>
+  </p>
+
+  <h2 style="font-size:20px;color:#0f4c81;border-bottom:2px solid #0f4c81;padding-bottom:6px;margin:32px 0 16px;">2. Asistente vacío</h2>
+  <p>Al hacer clic se abre la ventana del asistente. Tiene dos bloques iniciales: <em>Fichero</em> (a la izquierda) y <em>Pedido</em> (a la derecha). La sección <em>Previsualización de la configuración</em> permanece oculta hasta que se cargue un JSON válido.</p>
+  <p style="margin:18px 0;text-align:center;">
+    <img src="02_wizard_vacio.png" alt="Asistente Importar JSON MyGlaxior recién abierto" style="max-width:100%;border:1px solid #d9e2ec;border-radius:8px;box-shadow:0 2px 8px rgba(15,76,129,0.08);"/>
+  </p>
+
+  <table style="width:100%;border-collapse:separate;border-spacing:0;margin:18px 0;border:1px solid #d9e2ec;border-radius:8px;overflow:hidden;">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#0f4c81,#1a6bb8);color:#ffffff;">
+        <th style="text-align:left;padding:10px 14px;font-weight:600;">Campo</th>
+        <th style="text-align:left;padding:10px 14px;font-weight:600;">Obligatorio</th>
+        <th style="text-align:left;padding:10px 14px;font-weight:600;">Función</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#ffffff;">
+        <td style="padding:10px 14px;border-top:1px solid #eef3f8;"><strong>Fichero JSON</strong></td>
+        <td style="padding:10px 14px;border-top:1px solid #eef3f8;">Sí</td>
+        <td style="padding:10px 14px;border-top:1px solid #eef3f8;">JSON exportado por el configurador MyGlaxior (cabecera GXR o GXS).</td>
+      </tr>
+      <tr style="background:#f1f6fb;">
+        <td style="padding:10px 14px;"><strong>Cliente</strong></td>
+        <td style="padding:10px 14px;">Sí</td>
+        <td style="padding:10px 14px;">Contacto destinatario del pedido. Solo se listan contactos marcados como cliente.</td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:10px 14px;border-top:1px solid #eef3f8;"><strong>Precio unitario</strong></td>
+        <td style="padding:10px 14px;border-top:1px solid #eef3f8;">No</td>
+        <td style="padding:10px 14px;border-top:1px solid #eef3f8;">Precio del sistema configurado. Si no se indica, el pedido queda a 0,00 € para ajustar después.</td>
+      </tr>
+      <tr style="background:#f1f6fb;">
+        <td style="padding:10px 14px;"><strong>Notas</strong></td>
+        <td style="padding:10px 14px;">No</td>
+        <td style="padding:10px 14px;">Texto libre que se vuelca al campo de términos y condiciones del pedido.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="font-size:20px;color:#0f4c81;border-bottom:2px solid #0f4c81;padding-bottom:6px;margin:32px 0 16px;">3. Subir el JSON y revisar la previsualización</h2>
+  <p>Tras subir el fichero JSON, el asistente lo analiza automáticamente y muestra la sección <em>Previsualización de la configuración</em>. Permite verificar el contenido del JSON antes de crear el pedido.</p>
+  <p style="margin:18px 0;text-align:center;">
+    <img src="03_wizard_con_previsualizacion.png" alt="Asistente con previsualización tras subir el JSON" style="max-width:100%;border:1px solid #d9e2ec;border-radius:8px;box-shadow:0 2px 8px rgba(15,76,129,0.08);"/>
+  </p>
+
+  <table style="width:100%;border-collapse:separate;border-spacing:0;margin:18px 0;border:1px solid #d9e2ec;border-radius:8px;overflow:hidden;">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#0f4c81,#1a6bb8);color:#ffffff;">
+        <th style="text-align:left;padding:10px 14px;font-weight:600;">Dato previsualizado</th>
+        <th style="text-align:left;padding:10px 14px;font-weight:600;">Origen en el JSON</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#ffffff;">
+        <td style="padding:10px 14px;"><strong>Tipo Sistema</strong></td>
+        <td style="padding:10px 14px;">Clave raíz del JSON: <code style="background:#eef3f8;padding:1px 6px;border-radius:4px;color:#0f4c81;">GXR</code> (abatible) o <code style="background:#eef3f8;padding:1px 6px;border-radius:4px;color:#0f4c81;">GXS</code> (corredera).</td>
+      </tr>
+      <tr style="background:#f1f6fb;">
+        <td style="padding:10px 14px;"><strong>Nº Estructura</strong></td>
+        <td style="padding:10px 14px;"><code style="background:#dbe7f3;padding:1px 6px;border-radius:4px;color:#0f4c81;">structure_number</code></td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:10px 14px;"><strong>Dirección</strong></td>
+        <td style="padding:10px 14px;">Composición de <code style="background:#eef3f8;padding:1px 6px;border-radius:4px;color:#0f4c81;">address</code> + Planta + Unidad + Línea.</td>
+      </tr>
+      <tr style="background:#f1f6fb;">
+        <td style="padding:10px 14px;"><strong>Aperturas</strong></td>
+        <td style="padding:10px 14px;"><code style="background:#dbe7f3;padding:1px 6px;border-radius:4px;color:#0f4c81;">product_openings</code></td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:10px 14px;"><strong>Paneles cristal</strong></td>
+        <td style="padding:10px 14px;">Suma de <code style="background:#eef3f8;padding:1px 6px;border-radius:4px;color:#0f4c81;">glass_panel_amount</code> de cada apertura.</td>
+      </tr>
+      <tr style="background:#f1f6fb;">
+        <td style="padding:10px 14px;"><strong>Espesor vidrio</strong></td>
+        <td style="padding:10px 14px;">Distintos <code style="background:#dbe7f3;padding:1px 6px;border-radius:4px;color:#0f4c81;">glass_thickness</code> presentes en las aperturas.</td>
+      </tr>
+      <tr style="background:#ffffff;">
+        <td style="padding:10px 14px;"><strong>Color perfiles</strong></td>
+        <td style="padding:10px 14px;">Distintos <code style="background:#eef3f8;padding:1px 6px;border-radius:4px;color:#0f4c81;">upper_profile_color</code> y <code style="background:#eef3f8;padding:1px 6px;border-radius:4px;color:#0f4c81;">lower_profile_color</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="border-left:4px solid #f59e0b;background:#fef7e6;padding:14px 18px;border-radius:0 8px 8px 0;margin:18px 0;">
+    <strong style="color:#92400e;">Validación:</strong> si el JSON no contiene una clave raíz válida (GXR o GXS), el asistente muestra el error <em>"El JSON no contiene una clave de sistema válida (GXR, GXS, ...)"</em> y no permite continuar.
+  </div>
+
+  <h2 style="font-size:20px;color:#0f4c81;border-bottom:2px solid #0f4c81;padding-bottom:6px;margin:32px 0 16px;">4. Crear el pedido de venta</h2>
+  <p>Pulsando el botón <em>Crear Pedido de Venta</em>, el asistente:</p>
+  <ol style="padding-left:20px;">
+    <li style="margin:6px 0;">Crea un nuevo <code style="background:#eef3f8;padding:1px 6px;border-radius:4px;color:#0f4c81;">sale.order</code> en estado <em>Presupuesto</em> con el cliente indicado.</li>
+    <li style="margin:6px 0;">Añade una línea con el producto genérico <code style="background:#eef3f8;padding:1px 6px;border-radius:4px;color:#0f4c81;">[GLAXIOR-CONF]</code> y una descripción detallada con la configuración (estructura, dirección, aperturas, paneles, vidrio, perfiles, dimensiones por apertura).</li>
+    <li style="margin:6px 0;">Vuelca al pedido los campos custom de la pestaña <em>MyGlaxior</em>: tipo de sistema, nº de estructura, dirección de instalación, nº de aperturas y nº de paneles.</li>
+    <li style="margin:6px 0;">Adjunta el JSON original al pedido (en el panel <em>Archivos</em> del chatter), disponible para fábrica.</li>
+    <li style="margin:6px 0;">Abre el pedido recién creado.</li>
+  </ol>
+  <p style="margin:18px 0;text-align:center;">
+    <img src="04_pedido_creado.png" alt="Pedido de venta recién creado con la línea descriptiva" style="max-width:100%;border:1px solid #d9e2ec;border-radius:8px;box-shadow:0 2px 8px rgba(15,76,129,0.08);"/>
+  </p>
+
+  <h2 style="font-size:20px;color:#0f4c81;border-bottom:2px solid #0f4c81;padding-bottom:6px;margin:32px 0 16px;">5. Pestaña MyGlaxior</h2>
+  <p>En el formulario del pedido aparece una pestaña <em>MyGlaxior</em> con todos los datos de la configuración. La pestaña solo se muestra si el pedido procede del configurador (campo <em>Nº Estructura MyGlaxior</em> informado).</p>
+  <p style="margin:18px 0;text-align:center;">
+    <img src="05_pedido_pestana_myglaxior.png" alt="Pestaña MyGlaxior del pedido con campos custom" style="max-width:100%;border:1px solid #d9e2ec;border-radius:8px;box-shadow:0 2px 8px rgba(15,76,129,0.08);"/>
+  </p>
+
+  <table style="width:100%;border-collapse:separate;border-spacing:0;margin:18px 0;border:1px solid #d9e2ec;border-radius:8px;overflow:hidden;">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#0f4c81,#1a6bb8);color:#ffffff;">
+        <th style="text-align:left;padding:10px 14px;font-weight:600;">Bloque</th>
+        <th style="text-align:left;padding:10px 14px;font-weight:600;">Campos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#ffffff;">
+        <td style="padding:10px 14px;"><strong>Configuración</strong></td>
+        <td style="padding:10px 14px;">Tipo Sistema (GXR / GXS), Nº Estructura MyGlaxior, Fichero JSON.</td>
+      </tr>
+      <tr style="background:#f1f6fb;">
+        <td style="padding:10px 14px;"><strong>Instalación</strong></td>
+        <td style="padding:10px 14px;">Dirección Instalación, Nº Aperturas, Nº Paneles Cristal.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="font-size:20px;color:#0f4c81;border-bottom:2px solid #0f4c81;padding-bottom:6px;margin:32px 0 16px;">6. JSON adjunto para fábrica</h2>
+  <p>El JSON original se conserva como adjunto en el panel <em>Archivos</em> del pedido, lo que permite descargarlo y enviarlo a fábrica con un solo clic.</p>
+  <p style="margin:18px 0;text-align:center;">
+    <img src="06_adjunto_json.png" alt="JSON original adjunto al pedido en el panel Archivos" style="max-width:100%;border:1px solid #d9e2ec;border-radius:8px;box-shadow:0 2px 8px rgba(15,76,129,0.08);"/>
+  </p>
+
+  <h2 style="font-size:20px;color:#0f4c81;border-bottom:2px solid #0f4c81;padding-bottom:6px;margin:32px 0 16px;">7. Buenas prácticas</h2>
+  <ul style="padding-left:20px;">
+    <li style="margin:6px 0;"><strong>Cliente:</strong> el contacto debe existir previamente en Odoo. Si es nuevo, créalo desde <em>Ventas → Clientes</em> antes de importar el JSON.</li>
+    <li style="margin:6px 0;"><strong>Precio:</strong> hoy se introduce manualmente porque el JSON del configurador no incluye el precio. Cuando MyGlaxior lo incluya, se podrá leer del propio fichero.</li>
+    <li style="margin:6px 0;"><strong>Trazabilidad:</strong> el JSON original queda siempre adjunto al pedido — fuente única de verdad si la fábrica necesita reconstruir la configuración.</li>
+    <li style="margin:6px 0;"><strong>Cambios manuales:</strong> los campos de la pestaña <em>MyGlaxior</em> son informativos. Modificarlos no regenera el JSON ni la descripción del pedido.</li>
+  </ul>
+
+  <div style="border-left:4px solid #16a34a;background:#ecfdf5;padding:14px 18px;border-radius:0 8px 8px 0;margin:18px 0;">
+    <strong style="color:#15803d;">Soporte:</strong> ante cualquier incidencia con el módulo, contactar con Process Control. Versión actual del módulo: <code style="background:#d1fae5;padding:1px 6px;border-radius:4px;color:#15803d;">19.0.1.0.0</code>.
+  </div>
+
+  <footer style="margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0;color:#64748b;font-size:12px;text-align:center;">
+    Process Control · GLAXIOR — Importación JSON Configurador MyGlaxior · Odoo 19
+  </footer>
+
+</section>
